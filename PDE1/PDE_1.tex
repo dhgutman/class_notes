@@ -1,0 +1,1330 @@
+\documentclass[11pt]{amsart}% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+%\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+%\geometry{landscape}                		% Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex	
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{esint}
+\usepackage{enumerate}
+\usepackage{epstopdf}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{claim}{Claim}
+\newtheorem{example}{Example}
+\newtheorem{remark}{Remark}
+\newtheorem{corollary}{Corollary}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+\newcommand\F{\mathbb{F}} \newcommand\E{\mathbb{E}} \newcommand\R{\mathbb{R}}
+\newcommand\Z{\mathbb{Z}} \newcommand\N{\mathbb{N}} \newcommand\C{\mathbb{C}}
+\newcommand\Q{\mathbb{Q}} \newcommand\eps{\varepsilon}
+\newcommand\cM{\mathcal{M}}	\newcommand\cA{\mathcal{A}}
+\newcommand\cC{\mathcal{C}} \newcommand\cB{\mathcal{B}}
+\newcommand\cE{\mathcal{E}}
+\DeclareMathOperator{\sech}{sech}
+\DeclareMathOperator{\dt}{\frac{d}{dt}}
+\DeclareMathOperator{\pt}{\frac{\partial}{\partial t}}
+\DeclareMathOperator{\dive}{div}
+
+
+
+\title{Partial Differential Equations 1}
+\author{Son Van}
+\date{Spring 2016}
+
+\begin{document}
+\maketitle
+
+This course is taught by professor Robert Pego at Carnegie Mellon University in Spring 2016.
+
+\textbf{Monday, Jan 11 2016}--Orientation
+
+This week, we will talk about:
+
+\begin{itemize}
+\item
+  Analysis of Poisson equation: \[\Delta u= f\] (push superposition
+  until it breaks), Evans 2.2, divergence theorem.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+Things about PDE:
+
+\begin{itemize}
+\item
+  No unified theory
+\item
+  ``PDE'' too general, too limited
+\item
+  Large subject
+\end{itemize}
+
+Today we will talk about motivating issues/glimpses. We will talk about
+some themes and methods.
+
+Fundamental types of equations:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  First order, \(f(u,u_x,u_t)=0\)
+\item
+  Laplace's equations -- elliptic
+\item
+  Wave equations -- hyperbolic
+\item
+  Heat equations -- parabolic
+\end{enumerate}
+
+\begin{itemize}
+\item
+  What kind of solution can a PDE have?
+\end{itemize}
+
+\begin{example} the wave equation \(u_tt= c^2u_{xx}\) has solutions
+\(u:\R\times \R \to \R\) given by \[u(x,t)=f(x-ct)\] for any \(C^2\)
+\(f:\R\to \R\).
+\end{example}
+Note: \(u_t+cU_x=0\) so
+\((\partial_t^2-c^2\partial_x^2)u = (\partial_t+c\partial_x)(\partial_t-c\partial_x)u=0\).
+
+If \(g:\R\to\R\) is \(C^2\) then \(v(x,t)=g(x+ct)\) works, too.
+
+Linear superposition:
+\[(\partial_t^2-c^2\partial_x^2)(f(x-ct)+g(x+ct))=0.\]
+
+\begin{example} Fermi Pasta Ulam lattice dynamics
+\end{example}
+Replated PDEs:
+
+\begin{itemize}
+\item
+  \(\partial_t^2 u = c^2\partial_x^2 u\), \(c=\sqrt{k/m_0}\).
+\item
+  KdV: \(u_t+uu_x+u_{xxx}=0\).
+\end{itemize}
+
+1960: solution \(u=3c \sech^2(\frac{\sqrt{c}}{2}(x-ct))\)-- explosion of
+soliton theory ``integrable system''.
+
+1994: Friescke \& Wattis: exists FPU solution of form \(r_j(t)=f(j-ct)\)
+
+\begin{itemize}
+\item
+  What characteristizes solutions of PDE?
+\end{itemize}
+
+A problem (PDE+ boundary condition) is ``well-posed'' if solution:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  exists
+\item
+  unique
+\item
+  depend continuously on data
+\end{enumerate}
+
+Math aim: establish isomorphism between data space and solution space.
+
+Often enough one wants the solution to capture physical meaning as much
+as possible. ``Solutions'' may not be differentiable! \(C^k\) does not
+suffice. Thus, we need to study Sobolev space, distribution theory, and
+functional analysis.
+
+Example 3: \(u_t+cu_x=0\), \(u=f(x-ct)\). Solutions are
+
+\begin{itemize}
+\item
+  classical if \(f\in C^1\),
+\item
+  weak if \(L^1_{loc}\), measure, distribution.
+\end{itemize}
+
+What properties do solutions enjoy?
+
+\begin{itemize}
+\item
+  Regularity (smooth or not? Type of singularities?)
+\item
+  Asymptotic behavior, stability of solutions
+\end{itemize}
+
+A 1 million dollar question: suppose \(u:\R^3\times [0,\infty)\to \R^3\)
+is periodic in \((x_1,x_2,x_3)\) and ``solves'' the Navier-Stokes
+equations of fluid flow. Prove or disprove if \(u_0\) is \(C^\infty\)
+then \(u\) is \(C^\infty\) on \(\R^3\times[0,\infty)\).
+
+\[\nabla\cdot u =0\]
+\[\partial_t u + (u\cdot \nabla)u+\nabla p=\Delta u.\]
+
+The meaning of ``solves'' is made precise by J. Leray (1934).
+
+\begin{itemize}
+\item
+  Lin, Liu \& Pego (2007, 2010): new formula for \(p\).
+\end{itemize}
+
+What methods?
+
+\begin{itemize}
+\item
+  ``Energy'' method, maximum principles, Duhamel principle.
+\end{itemize}
+
+How can solutions (uses fully) be approximated? Aim of analysis: illuminate
+computation.
+
+\newpage
+\textbf{Wednesday, Jan 13 2016}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+Notation (Evans): Let \(\alpha(n)=\int_{B(0,1)}1dx=\) volume of
+\(B(0,1)\) in \(\R^n\) \(=\frac{\pi^{n/2}}{\Gamma(\frac{n}{2}+1)}\).
+Then \(n\alpha(n)=\int_{\partial B}1dS=\) \(n-1\) dimensional surface
+area of \(\partial B(0,1)\).
+
+Poisson equation: \[-\Delta u=f(x).\]
+
+\begin{lemma}[Some radial solution of \(-\Delta u =0\)]. For
+\(n\ge 2\), \(x\in \R^n\), \(x\not=0\) define
+\[{\Psi}(x)=\begin{cases} \log\vert x\vert, n=2 \\
+\frac{1}{|x|^{n-2}}, n\ge 3\end{cases}.\] Then \(\Delta {\Psi}=0\) for
+\(x\not=0\).
+\end{lemma}
+\begin{proof} Just calculate, then
+\(\Delta u = v''(r)+\frac{n-1}{r}v'(r)\) where \(r=\vert x\vert\),
+\(u(x)=v(r)\).
+\end{proof}
+
+\begin{lemma}[Superposition] Suppose \(w:\R^n\to \R\) is \(C^2\) and
+\(-\Delta w(x)=h(x)\). Suppose \(f:\R^n\to \R\) is continuous with
+\(f(x)=0 \forall x\) with \(\vert x\vert >\rho\) for some \(\rho\). Let
+\(u(x)=\int_{\R^n}w(x-y)f(y)dy\). Then \(u\) is \(C^2\) and
+\[-\Delta u(x)=\int_{\R^n} h(x-y)f(y)dy.\]
+\end{lemma}
+\begin{proof} Exercise.
+\end{proof}
+
+\textbf{Remark.} \(w=\Psi, h=0\) is not allowed.
+
+\begin{theorem} Suppose \({\Psi}\) is above and \(f:\R^n\to \R\) is
+\(C^2\) with \(f(x)=0\) if \(\vert x \vert \ge \rho\). define
+\[u(x)= \int_{\R^n} {\Psi}(x-y)f(y)dy, x\in \R^n.\]
+
+Then (i) \(u\) is \(C^2\) and (ii) \(-\Delta u(x)=a_nf(x)\),
+\(x\in \R^n\) where \[a_n=\begin{cases} -2\pi, \qquad n=2 \\
+      (n-2)n\alpha(n), \qquad n\ge 3\end{cases}.\]
+\end{theorem}
+\textbf{Remark.} Define
+\[\Phi(x)=\frac{1}{a_n}{\Psi}(x)=\begin{cases}-\frac{1}{2\pi}\log\vert x\vert, \qquad n=2\\
+\frac{1}{(n-2)n\alpha(n)}\frac{1}{\vert x\vert^{n-2}}, \qquad n\ge 3\end{cases}\]
+
+Then the Dirac \(\delta\) formulation is as following,
+\[-\Delta \Phi(x-y)=\delta(x-y),\]
+\[f\mapsto \int\delta(x-y)f(y)dy = f(x).\]
+
+\begin{proof}[Proof of the theorem] 
+1. We claim \(u(x)\) is well-defined as an
+improper (Riemann) integral, i.e.,
+\[u(x):=\int_{\R^n}\Psi(y)f(x-y)dy =\lim_{\epsilon\to 0}\int_{\epsilon<\vert y\vert}\Psi(y)f(x-y)dy\]
+exists.
+
+We let \(u_{\epsilon} = \int_{\epsilon<\vert y\vert}\Psi(y)f(x-y)dy\).
+
+To see this, let \(\Vert f\Vert_\infty =\sup_{y\in\R^n}\vert f(x)\vert\)
+and note that for every \(\epsilon_1<\epsilon_2\),
+
+\begin{eqnarray*}
+\vert u_{\epsilon_1}(x)-u_{\epsilon_2}(x)\vert &\le& \int_{\epsilon_1<\vert y\vert <\epsilon_2} \vert \Psi(y)\vert \Vert f\Vert_\infty dy\stackrel{(n\ge 3)}{=} \Vert f\Vert_\infty \int_{\epsilon_1}^{\epsilon_2}\frac{1}{r^{n-2}}r^{n-1}n\alpha(n)dr\\ &=& \Vert f\Vert_\infty C(\epsilon_1^2-\epsilon_2^2)
+\end{eqnarray*}
+for some constant \(C\) (\(=\frac{1}{2} n\alpha(n)\)). So it's
+Cauchy.
+
+It follows that
+
+\begin{enumerate}
+\def\labelenumi{(\roman{enumi})}
+
+\item
+  \(\lim_{\epsilon\to0}u_\epsilon(x)=:u(x)\) exists for all
+  \(x\in \R^n\).
+\item
+  \(\vert u_\epsilon (x)-u(x)\vert \to 0\) uniformly for \(x\in\R^n\) as
+  \(\epsilon\to 0\).
+\end{enumerate}
+
+\textbf{Remarks.} This all works because \(\Psi\) is \(L_{loc}^1\).
+
+\textbf{Note.} \(u(x)\) satisfies the estimate
+\[\vert u(x)\vert \le \Vert f\Vert_\infty \int_{\vert y-x\vert \le \rho} \vert \Psi(y)\vert dy = \Vert f\Vert_\infty C_0(x,\rho)\]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+
+\item
+  \(u\) is continuous. For \(h\in \R^n, \vert h\vert \le 1\),
+  \begin{eqnarray*}\vert u(x+h)-u(x)\vert &=& \vert \int_{\vert y-x\vert \le \rho+1} \Psi(y)(f(x+h-y)-f(x-y))dy\vert\\ &\le& \sup_z\vert f(z+h)-f(z)\vert C_0(x,\rho+1)\stackrel{h\to0}{\to}0
+  \end{eqnarray*}
+  because \(f\) is uniformly continuous on the compact domain.
+\end{enumerate}
+
+\textbf{Notation.} We define the modulus of continuity
+\[\omega(f,a):=\sup_{z\in\R^n, \vert h\vert <a} \vert f(z+h)-f(z)\vert.\]
+It is an easy exercise to show \(f\) is uniformly continuous iff
+\(\omega(f,a)\stackrel{a\to0}{\to}0\).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+
+\item
+  \(u\) is differentiable and
+  \[\frac{\partial u}{\partial x_i}(x)=\int_{\R^n} \Psi(y)\frac{\partial f}{\partial x_i}(x-y)dy \tag{*}.\]
+\end{enumerate}
+
+Let \(v_i(x)=RHS\) then \(v_i(x)\) is well-defined (as before in (1)).
+For \(h\in \R, \vert h \vert \le 1\), we have
+\begin{eqnarray*}
+\vert \frac{u(x+he_i-y)-u(x)}{h}-v_i(x)\vert &=&\vert \int \Psi(y)[\frac{f(x+he_i-y)-f(x-y)}{h}-\frac{\partial f}{\partial x_i}(x-y)]dy\vert\\
+&\le& \Vert \frac{f(\cdot +he_i)-f(\cdot)}{h} -\frac{\partial f}{\partial x_i}(\cdot)\Vert_\infty C_0(x,\rho+1)
+\end{eqnarray*}
+because \(\frac{\partial f}{\partial x_i}\) is uniformly continuous (use
+Taylor theorem with remainder and
+$\omega(\frac{\partial f}{\partial x_i},\vert h\vert)$).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\item
+  As in step 2 and 3, conclude from \((*)\),
+  \(\frac{\partial u}{\partial x_i}\) is continuous hense \(u\) is
+  differentiable. Furthermore \(u\in C^2\) and
+  \[\Delta u(x) =\int_{\R^n} \Psi(y)\Delta_x f(x-y)dy.\]
+\item
+  Note: \[\Delta_x f(x-y)=\Delta_y f(x-y).\]
+\end{enumerate}
+\end{proof}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\textbf{Friday, Jan 15 2016}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+\begin{proof}[Continuation of the proof]
+Reivew from last time. We have established from steps 1,2,3,4 that \(u\)
+is \(C^2\) and \[\Delta u =\int \Psi(y)\Delta_x f(x-y)dy\]
+
+and that \(\Delta_x f(x-y)= \Delta_y f(x-y).\)\$
+
+\emph{Diverges:} review integration by parts and the divergence thoerem
+(Evans appendix C).
+
+\begin{theorem} Let \(U\subseteq \R^n\) be open and bounded. Ssume
+that \(\partial U\) is \(C^1\). If \(x_0\in \partial \Omega\) there
+exists \(r>0\) so that
+\[U\cap B(x_0,r)=\{x\vert x_n >\gamma(x_1, x_2,..., x_{n-1})\} \cap B(x_0,r)\]
+for some coordinates and some \(C^1\) function
+\(\gamma: \R^{n-1}\to \R\).
+\end{theorem}
+Let \(\vec{\nu}(x_0)\) denote the unit outward normal, i.e.,
+\[\vec{\nu} = C(\gamma_{x_1},...,\gamma_{x_{n-1}},-1)\] and
+\[\vert\vec{\nu}(x_0)\vert=1.\]
+
+\begin{theorem} (1) Suppose \(u\in C^1(U)\cap C(\overline{U})\). Then
+\[\int_{U} u_{x_i} dx = \int_{\partial U} u\nu_i dS\] for \(i=1,...,n\).
+
+\begin{enumerate}
+\def\labelenumi{(\arabic{enumi})}
+\setcounter{enumi}{1}
+\item
+  If \(u,v \in C^1(U)\cap C(\overline{U})\) then
+  \[\int_{U} u_{x_i}v+uv_{x_i} dx = \int_{\partial U} uv \nu_i dS.\]
+\item
+  \[\int_U {\rm div} \vec{u} dx = \int_{\partial U} \vec{u}\vec{\nu}dS\]
+  where \(\vec{u}\in C^1(U;\R^n)\cap C(\overline{U};\R^n)\).
+\end{enumerate}
+\end{theorem}
+
+\emph{Back to step 5.} Fix \(x\in \R^n\). Let
+\(B_\epsilon=B(0,\epsilon)\) and
+\(U_\epsilon = B^o(0,2\rho+\vert x\vert)\backslash B_\epsilon\)
+
+\[\Delta u(x) = (\int_{B_{\epsilon}}+\int_{U_\epsilon})\Psi(y)\Delta_y f(x-y) dy =: I_\epsilon+J_\epsilon\]
+
+\begin{enumerate}
+\def\labelenumi{(\roman{enumi})}
+\item
+  Now,
+  \[\vert I_\epsilon\vert \le \Vert \Delta f\Vert_\infty \int_{B_\epsilon}|\Psi(y)\vert dy \le (C\int_0^\epsilon \frac{1}{r^{n-2}}r^{n-1}dr)\le C\cdot \begin{cases} \epsilon^2, \quad n\ge 3\\
+            \epsilon^2(\vert \log \epsilon\vert +1), \quad n=2
+            \end{cases}.\] So, \(\vert I_\epsilon \vert \to 0\) as
+  \(\epsilon\to 0\).
+\item
+  For \(J_\epsilon\), integrate by parts. Note that \(f(x-y)=0\) for
+  \(\vert y\vert > \vert x\vert +\rho\). So,
+  \begin{eqnarray*}
+  J_\epsilon &=& \sum_{i=1}^n \int_{U_\epsilon} \Psi(y)\frac{\partial^2}{\partial y^2} f(x-y) = \sum_{i=1}^n[\int_{\partial U_\epsilon} \Psi(y)\frac{\partial}{\partial y_i}f(x-y)\nu_i dS -\int_{U_\epsilon}\frac{\partial}{\partial y_i} \Psi(y) \frac{\partial}{\partial y_i}f(x-y)dy]\\
+  &=&-\sum_{i=1}^n \int_{\partial U_\epsilon}[\Psi(y)\frac{\partial}{\partial_{y_i}}f(x-y)\nu_i -\frac{\partial \Psi}{\partial y_i}f(x-y)\nu_i]dS(y) +\int_{U_\epsilon}\Delta \Psi(y)f(x-y)dy.
+  \end{eqnarray*}
+  Let \(B_\epsilon\) the closed ball with radius \(\epsilon\) around
+  \(0\). Then,
+  \[J_\epsilon=-\sum_{i=1}^n \int_{\partial B_\epsilon}[\Psi(y)\frac{\partial}{\partial_{y_i}}f(x-y)\hat{\nu}_i -\frac{\partial \Psi}{\partial y_i}f(x-y)\hat{\nu}_i]dS(y) +\int_{B_\epsilon}\Delta \Psi(y)f(x-y)dy\]
+  where \(\hat{\vec{\nu}}\) is the outward normal vector to
+  \(B_\epsilon\). The last term goes to \(0\) as \(\epsilon\to 0\).
+\end{enumerate}
+
+(Eventually, I'll drop the vector sign on the top of the vectors.)
+
+\begin{enumerate}
+\def\labelenumi{(\roman{enumi})}
+\setcounter{enumi}{2}
+
+\item
+  \[\vert \sum_i \frac{\partial}{\partial y_i}f(x-y) \hat{\nu}_i\vert =\vert \nabla f\cdot \hat{\nu}\vert \le \vert \nabla f\vert \vert \hat{\nu}\vert \le \Vert \nabla f\Vert_\infty.\]
+\end{enumerate}
+
+We break \(J_\epsilon=L_\epsilon + K_\epsilon\). So,
+$$\vert L_\epsilon \vert \le \Vert \nabla f\Vert_\infty \int_{\partial B_\epsilon}\vert \Psi(y)\vert dS =\Vert \nabla f\Vert_\infty\begin{cases} \vert \log \epsilon\vert 2\pi\epsilon, \quad n=2\\ \frac{1}{\epsilon^{n-2}}n\alpha(n)\epsilon^{n-1}, \quad n\ge 3 \end{cases}.$$
+So, \(\vert L_\epsilon \vert\to 0\) as \(\epsilon\to 0\).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{5}
+
+\item
+  Now, consider
+  \[K_\epsilon=\int_{\partial B_\epsilon} \nabla \Psi(y)\cdot \hat{\nu} f(x-y)dS\]
+  \(y\in\partial B_\epsilon\) so \(\vert y\vert =\epsilon\) and
+  \(\hat{\nu}(y)=\frac{y}{\vert y\vert}\). So,
+  \[\nabla \Psi(y)=\begin{cases} \nabla \log\vert y\vert\\
+  \nabla \vert y\vert^{2-n}\end{cases}=b_n \vert y\vert^{1-n}\nabla\vert y\vert\]
+  where \[b_n=\begin{cases} 1, \quad n=2\\
+  2-n, \quad n\ge 3\end{cases}.\]
+\end{enumerate}
+
+Furthermore,
+\[\frac{\partial}{\partial y_i}\vert y\vert^2=2\vert y\vert \frac{\partial}{\partial y_i}\vert y\vert\]
+so, \[\nabla \vert y\vert =\frac{y}{\vert y\vert} =\hat{\nu}.\]
+Therefore,
+\[K_\epsilon=b_n\int_{\partial B_\epsilon}\epsilon^{1-n}\hat{\nu}\cdot \hat{\nu}f(x-y)dS(y)=b_n\int_{\partial B_\epsilon} f(x-y)dS(y) = \frac{b_n n\alpha(n)}{\epsilon^{n-1}n\alpha(n)}\int_{\partial B_\epsilon}f(x-y)dS(y).\]
+Since
+\(\epsilon^{n-1}n\alpha(n)=\int_{\partial B_\epsilon}\int \chi dS\), we
+write
+\[K_\epsilon =b_n n\alpha(n)\fint_{\partial B_\epsilon}f(x-y)dS(y)\]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{6}
+
+\item
+  Claim:
+  \[\lim_{\epsilon\to0} \fint_{\partial B_\epsilon} f(x-y)dS(y)=f(x) = \fint_{\partial B_\epsilon}f(x)dS(y).\]
+\end{enumerate}
+
+\begin{proof}[Proof of claim] We have
+\[\vert \int_{\partial B_\epsilon} f(x-y)-f(x) dS(y)\vert \omega_f(x,\epsilon)\fint \chi \to 0\]
+as \(\epsilon \to 0\).
+\end{proof}
+Thus,
+\[\Delta u(x)=\lim_{\epsilon\to 0}(I_\epsilon+L_\epsilon+K_\epsilon)=0+0+b_n n\alpha(b)f(x)).\]
+\end{proof}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\textbf{Wednesday, Jan 20 2016}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+{\bf I. Balance laws of physics}
+\begin{itemize}
+    \item Physical motivation
+    \item Mathematical assumption
+    \item Balance laws (conservation laws)
+    \item Equations of motion
+\end{itemize}
+
+{\bf II. Discrete physical model}
+\begin{itemize}
+    \item Nondimensionalization and scaling
+    \item Approximate by PDE
+\end{itemize}
+Pure advection:
+$$f_t+v\cdot \nabla f =0,$$
+$$f=g(x-vt).$$
+
+Mass conservation in gas dynamics: $ \rho_t+{\rm div}(\rho v)=0$ where $\rho$ is a scalar function.
+
+{\bf Ingredients for describing gas $f(x,t)$:}
+\begin{itemize}
+    \item Container: $\Omega\subseteq \R^n$ bounded open set
+    \item Velocity field $v:\Omega\times[0,T] \to \R^n$
+    \item Mass densitiy filed $\rho:\Omega\times[0,T]\to \R$
+\end{itemize}
+
+Assume: $\partial \Omega$ is $C^1$, let $Q_T=\Omega\times(0,T)$, $v\in C^1(Q_T,\R^n)\cap C(\overline{Q_T},\R^n)$, $\rho\in C^1(Q_T)\cap C(\overline{Q_T})$.
+
+\begin{definition}
+    A \emph{particle path} is a $C^1$ path $z:[0,T]\to \Omega$ satisfying
+    $$\frac{d}{dt} z = v(z(t),t), \quad t\in (0,T).$$
+\end{definition}
+
+\begin{definition}
+    A quantity $f\in C(\overline{Q_T},\R)$ is \emph{purely advected} (by v) if for every particle path $z$, the function $t\mapsto f(z(t),t)$ is constant in time.
+\end{definition}
+
+\begin{remark}
+    If $f\in C^1(Q_T)$ is purely advected, then
+    $$0=\frac{d}{dt}f(z(t),t)=\frac{\partial f}{\partial t} +\sum_{i=1}^n \frac{\partial f}{\partial x_i}(z(t),t)\frac{dz_i}{dt} = f_t + v(z(t),t)\cdot\nabla f.$$
+
+Given $(x,t)\in Q_T$, we  may choose $z$ so $z(t)=x$. Therefore,
+\[f_t + v(x,t)\nabla f(x,t) =0 \tag{*}\]
+in $Q_T$. This is the {\bf transport equation}.
+
+{\bf Initial value problem.} Given $f(x,0)=g(x)$, $x\in \Omega$ find $f(x,t)$ to solve $(*)$.
+
+A method of solution: Given $(x,t)$ find a particle path $z$ with $z(t)=x$. Then $f(x,t)=f(z(0),0)=g(z(0))$.
+
+One wants to check that this solves the PDE $(*)$.
+\end{remark}
+
+{\bf Mass conservation 1} (``physical" derivation).
+
+Fix any subregion $\cB\subseteq \Omega$ with smooth boundary. The total mass of gas in $\cB$ is $m(t,\cB):=\int_{\cB} \rho(x,t)dx$.
+
+We seek an approximation for $$\frac{d}{dt}m(t,\cB) = \lim_{\Delta t \to 0^+}\frac{m(t+\Delta t,\cB)-m(t,\cB)}{\Delta t}.$$
+
+Approximate $\cB$ by polygonal domains. Approximate $v$ and $\rho$ piecewise constant near faces. The polygon has center $x$, area $\Delta S$, normal vector $\nu$.
+
+Volume of gas passing through in time $\Delta t$ is
+
+$$\Delta h \Delta S = (v(x)\cdot\nu(x)\Delta t)\Delta S.$$
+
+Mass of this gas is $\rho v\cdot \nu \Delta t \Delta S$.
+
+Sum over faces, the mass of gas escaping $\cB$ is
+$$\sum \rho v\cdot \nu \Delta S\Delta t.$$
+
+Reasonable inference: 
+
+$$\lim_{\Delta t\to 0} \int_{\cB} \frac{\rho(x,t+\Delta t)-\rho(x,t)}{\Delta t} dx = -\int_{\partial \cB} \rho v\cdot \nu dS.$$
+
+At the level of continuous field, this is a postulate:
+\[ \dt \int_{\cB} \rho(x,t)dx =-\int_{\partial\cB}\rho v\cdot \nu dS\]
+for all $\cB \subseteq \Omega$ with $\partial \cB$ smooth.
+
+To derive the PDE, we use the divergence theorem and set
+\[ \int_{{\cB}} \pt\rho + \dive(\rho v) dx =0 \tag{M1}\]
+for all $\cB \subseteq \Omega$, $\partial \cB$ smooth.
+
+Assuming $\rho, v$ are $C^1$, it follows that
+\[ \pt \rho + \dive(\rho v)=0 \tag{M2}\]
+for all $(x,t)\in Q_T$ (continuity equation). We have pure advection if $\dive(v)=0$.
+
+{\bf Mass conservation 2} (Lagrangian viewpoint).
+Fix $\cB\subseteq \Omega$ with smooth $\partial \cB$. Fix $t_0\in (0,T)$. For all $x\in \Omega$, let $z(x,t)$ be the particle path through $(x,t)$.
+$$\pt z(x,t) = v(z(x,t),t)$$ where $z(x,t_0) =x$. Let $$z(\cB,t) = \{ y\in\Omega: y=z(x,t), x\in \Omega\}.$$
+
+Postulate:
+
+\[ \int_{z(\cB, t)} \rho(y,t)dy \text{ is constant in time $\forall \cB\subseteq \Omega$ smooth.} \tag{M3}\]
+
+\begin{theorem}
+    $(M3)\implies(M2)$
+\end{theorem}
+\begin{proof}[Sketch]
+    We use the map $x\mapsto z(x,t)$ to change variables.
+    
+    Let $J(x,t)=\det (\frac{\partial z_i}{\partial x_j})$, and note $J(x,t_0)=1$.
+    
+    For $t\approx t_0$, $J>0$ and
+    $$\int_{z(\cB,t)} \rho(y,t)dy=\int_{\cB}\rho(z(x,t),t)J dx.$$
+    
+    Then $(M3)$ implies
+    $$0=\dt (\text{same stuff} ) =\int_{\cB}(\pt\rho +\nabla \rho\cdot \pt z)J + \rho\pt J dy.$$
+    
+    $$\pt z= v(z,t)\implies \pt \frac{\partial z}{\partial x}=\frac{\partial}{\partial x}\frac{\partial z}{\partial t} =\frac{\partial v}{\partial z}\cdot\frac{\partial z}{\partial x}.$$
+    
+    The Abel's formula (which mimicks the above calculation in higher dimension) says,
+    $$\dt J = (\dive v)J.$$
+    (The moral here is that you only need to know how to derive it in 1-D and then worry about generalization in n-D later. This is a very nice way to think about it.)
+    
+    Put $t=t_0$,
+    $$0=\int_{\cB}(\pt\rho(x,t_0)+\nabla\rho\cdot v + \rho\dive v) dx$$
+    for all $\cB$. Thus
+    $$0=(\text{ integrand })\implies (M2).$$
+\end{proof}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\textbf{Monday, Jan 25 2016}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+Last time: we discussed the derivation of mass balance.
+
+Today we will talk about remaining balance laws of gas dynamics.
+
+\emph{Momentum balance.} Follow a blob $z(t,\cB)$ of fluid. Momentum of the blob is
+$$\int_{z(t,\cB)} \rho(y,t)v(y,t)dy.$$
+ Assume the force density on the blob surface is
+ $$F=-\rho \nu$$ where $\rho$ is pressure and $\nu$ is the normal vector to the surface pointing outward. (Think of force pushing inside... of course there's force pushing outside, too... but we're not worried about it now)
+ 
+ \[ \dt \int_{z(t,\cB)} \rho v dy = -\int_{\partial z(t,\cB)} \rho \nu dS \tag{V1}\] for all $\cB\subseteq \Omega, \partial \cB \in C^1$.
+
+Repeat the argument that M3 $\implies$ M2, where $y=z(t,x)$ and $z(t_0,x)=x$, we have
+
+$$\int_{\cB} [\pt (\rho v_i)+ v\cdot\nabla(\rho v_i) + (\rho v_i) \dive v]J dx=-\int_{\partial \cB} \rho \nu_i dS = -\int_{\cB} \frac{\partial \rho}{\partial x_i} dx$$ where $J=1$
+
+Assuming fields are $C^1$, we conclude,
+\[ \pt(\rho \nu_i) + \dive(\rho v_i v) + \frac{\partial \rho}{\partial x_i} =0 \tag{V2-}.\]
+
+Using M2 this ``simplifies'' to
+$$\rho \frac{\partial v_i}{\partial t} +\rho v\cdot \nabla{v_i} + \frac{\partial \rho}{\partial x_i}=0$$
+or 
+\[ \rho\frac{\partial v}{\partial t} + \rho v\cdot Dv + \nabla \rho =0.\tag{V2}\]
+
+\emph{Energy balance.} $\theta :=$ temperature field, $\cE:=$ internal energy per unit mass ($\cE =\cE(\rho,\theta)$ from equation of state of gas)
+
+Total energy of blob $z(T,\cB)$ is
+$$\int_{z(t,\cB)}(\rho \cE + \frac{1}{2}\rho\vert v\vert^2)dy.$$
+So,
+$$\dt\int_{z(t,\cB)}(\rho \cE +\frac{1}{2}\rho\vert v\vert^2)dy = -\int_{\partial z(t,\cB)} q\cdot \nu dS -\int_{\partial z(t,\cB)} \rho v\cdot \nu dS$$ where $q$ is the heat flux vector and the last integral is the power supplised by $F$.
+
+Repeat the argument that M3 $\implies$ M2,
+$$0=\int_{\cB} (\pt (\rho \cE +\frac{1}{2} \rho \vert v\vert ^2) + \dive((\rho\cE+\frac{1}{2}\rho\vert v\vert^2)v)dx + \int_{\cB} (\dive q + \dive(\rho v))dx.$$
+
+For $C^1$ fields
+\[\pt(\rho \cE +\frac{1}{2}\rho\vert v\vert^2)+\dive((\rho\cE +\frac{1}{2}\rho\vert v\vert^2) v + q +\rho v)=0 \tag{E2-}\]
+
+Using (M2) and (V2),
+\[\rho \pt \cE + \rho v\cdot \nabla \cE +\rho \dive v +\dive q =0.\tag{E3}\]
+
+{\bf The heat equation.} (approx energy balance) Neglect motion ($v=0$), assume density to be constant, $\theta_0$ constant. Approximate
+$$\cE(\rho,\theta) \approx \cE(\rho,\theta_0) + \frac{\partial \cE}{\partial \theta}(\rho,\theta_0)(\theta-\theta_0) + \text{ neglect}.$$
+$c_v:=\frac{\partial \cE}{\partial \theta}$ is specific heat at constant volume.
+
+Energy balance now is
+$$\dt \int_{\cB} \rho c_v \theta(y,t)dy= -\int_{\partial \cB} q\cdot \nu dS.$$
+
+So
+$$\int_{\cB} \rho c_v\frac{\partial \theta}{\partial t} +\dive q) dy =0$$ for all $\cB$, we have
+$$ \rho c_v \frac{\partial \theta}{\partial t} +\dive q =0.$$
+
+Postulate: $$q(y,t) = -\lambda(\rho,\theta)\nabla \theta \quad \text{ (Fourier's law, hot to cold)}.$$
+
+Put $\kappa = \frac{\lambda}{\rho c_v}$ then
+$$\frac{\partial \theta}{\partial t} =\kappa \Delta \theta \quad \text{(heat equation)}.$$
+
+At steady state, $\Delta \theta =0$ is the Laplace's equation.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\textbf{Wednesday, Jan 27 2016}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+Today we are going to give different versions of the derivation of the wave equation.
+
+\subsection*{Diffusion from random walkers}
+Walkers hop on a lattice, $x=j\Delta x, j\in \Z$. 
+
+Let $u^n_j$ be the probability walker is at $x=j\Delta x$ at time $t=n\Delta t$.
+
+$$p = \text{ probability hopping to the right}$$
+$$q = \text{ probability hopping to the left}$$
+$$1-q-p = \text{ probability that the walker stays in the same position}$$
+
+Then $$u_j^{n+1}= p u_{j-1}^n + q u^n_{j+1} + (1-p-q)u^n_j.$$
+
+1. The simplest case is when $p=q$,
+$$u_j^{n+1}-u_j^n = p(u^n_{j-1} - 2u_j^n + u^n_{j+1})$$
+
+\emph{Continuum approximation.} Plug in $u^n_j = v(j\Delta x, n \Delta t)= v(x,t)$.
+
+The goal is to minimize the (order of) residual error $e_j^n$ by asking $v(x,t)$ satisfying a PDE.
+
+We then do the Taylor expansion
+$$u_j^{n+1} = v(x,t+\Delta t) = v(x,t)+\Delta tv_t(x,t) + \frac{1}{2} (\Delta t)^2 v_{tt}(x,t) + O(\Delta t^3)$$
+\begin{eqnarray*}
+u_{j+1}^{n} &=& v(x+\Delta x,t) = v(x,t)+\Delta xv_x(x,t) + \frac{1}{2} (\Delta x)^2 v_{xx}(x,t) + \frac{1}{6}(\Delta x)^3 \partial^3_x v\\ &&+\frac{1}{24} (\Delta x)^4\partial_x^4 v +\frac{1}{120} (\Delta x)^5\partial_x^5v + O(\Delta t^6)
+\end{eqnarray*}
+
+Thus,
+$$u_{j+1}^n-2_j^n + u_{j-1}^n = (\Delta x)^2 v_{xx} + \frac{2}{24}(\Delta x)^4 \partial^4_x v + O(\Delta x ^6)$$
+
+$$\Delta t v_t + O(\Delta t^2) = p\Delta x^2 v_{xx} + O(\Delta x^4) + e^n_j$$
+
+To minimize the order of error. Suppose $\Delta t = p\Delta x^2$ and then $e^n_j=O(\Delta x^4)$ provided $v_t=v_{xx}$.
+
+2. Biased walk $p\not=q$.
+
+$$u_j^{n+1} - u^n_j = q(u^n_{j+1} - u^n_j) + p(u^n_{j-1} - u^n_j) + e^n_j$$
+
+$$\Delta t + O(\Delta t^2) = q(\Delta x v_x + \frac{1}{2} \Delta x^2 v_{xx}) + p(-\Delta x v_x +\frac{1}{2}\Delta x^2 v_{xx}) + e_j^n+O(\Delta x^3)$$
+
+Take $\Delta t =\Lambda \Delta x$. Then
+$$\Delta x(v_t+cv_x) + \frac{\Delta t^2}{2} (v_{tt} -\alpha v_{xx})= O(\Delta t^3) + e^n_j$$ within $c=(p-q)\frac{\Delta x}{\Delta t}$, $\alpha=$(work out by ourselves).
+
+\begin{enumerate}
+    \item Require: $v_t+ cv_x=0$ ($v(x,t) = f(x-ct)$ implies $e^n_j = O(\Delta t^2)$.
+    \item Formally: $v_t+cv_x=O(\Delta t)$ implies $v_{tt}=c^2 v_{xx} +O(\Delta t)$. Plug this into the above equation, we get
+    $$\Delta t(v_t +cv_x -\beta \Delta t v_{xx})=O(\Delta t^3) + e^n_j$$ where $\beta =$(work out).
+\end{enumerate}
+
+Note that if $v(x,t) = f(x-ct,(\beta \Delta t)t) = f(\xi, \tau)$, then
+$$v_t + cv_x -\beta \Delta t v_{xx} = \beta \Delta t(f_{\tau}-f_{\xi\xi})$$
+Check: $e^n_j = O(\Delta t^3)$ if $f_\tau = f_{\xi\xi}$.
+
+\subsection*{Nonlinear lattice dynamics (FPU von Neumann)}
+
+Let $q_{j}$ be the displacement from the rest state. $q_{j-1}-q_j = r_j$, distortion of jth bond.
+
+$V(r)=$ potential for force law
+$$V'(r) = r + \frac{1}{2} r^2 + ...$$ where the coefficients are scale units.
+
+For large scale (which has been explored by engineers recently), $V'(r) = r^{3/2}$-- we won't talk about this.
+
+From Newton,
+$$\ddot{q_j}= V'(q_{j+1}-q_j) - V'(q_j-q_{j-1})$$
+\[ \ddot{r_j} = V'(r_{j+1}) - 2V'(r_j) + V'(r_{j-1}) \tag{*} \]
+
+Formal small amplitude, long wave approximation
+$$r_j(t) \approx \epsilon^p u(\epsilon j, \epsilon t)$$ where $u(x,\tau)$ is smooth
+
+Taylor with $x=\epsilon j$ and $\tau=\epsilon t$,
+$$r_{j+1}-2r_j + r_{j-1} = \epsilon^p(\epsilon^2 u_{xx} +\frac{\epsilon^4}{12}u_{xxxx} + O(\epsilon^6)$$
+$$r_{j+1}^2 - 2r_j^2 + r_{j-1}^2 = \epsilon^{2p}(\epsilon^2(u^2)_{xx} + O(\epsilon^4))$$
+
+Plug in (x),
+$$\epsilon^{p+2}u_{\tau\tau} = \epsilon^{p+2}u_{xx} + O(\epsilon^{p+4}) + O(\epsilon^{2p+2}).$$
+
+To a first approximation regime
+$$u_{\tau\tau}=u_{xx}$$
+There exist solutions of form $u(x\pm \tau)$. This describes the behavior on time scale $\tau= \epsilon t$ so $t=\tau/\epsilon$.
+
+A longer time scale with ``dispersion'' and ``weak nonlinearity'' (Krustal-Zabasky). Look for
+$$r_j(t) = \epsilon^{p}v(\epsilon(j-t), \epsilon^q t)$$ where $p=2, q=3$. So
+$\dot{r_j} = -\epsilon^{2+1}v_y + \epsilon^{2+3}v_s$ where $y,s$ are the variables of $v$.
+
+So,
+$$\ddot{r_j} = \epsilon^{2+2} v_{yy} - 2\epsilon^{2+1+3} v_{ys} + \epsilon^{2+6}v_{ss}$$
+
+From (*), this is
+$$\epsilon^{2+2}v_{yy} +\frac{\epsilon^{2+4}}{12}v_{yyyy} + \epsilon^{4+2}(v^2)_{yy} + O(\epsilon^8).$$
+We find that
+$$0=2\epsilon^{6}(v_s+vv_y + v_{yyy}/24)_y + O(\epsilon^8).$$
+
+So, in order to eliminate the 6th order, we want
+$$v_s+vv_y+\frac{1}{24} v_{yyy}=0.$$ This was discovered by Korteweg-de Vries (1895) and Boussinesq (1877) independently.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\textbf{Friday, Jan 29 2016}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+\section*{Analysis of Laplace's equation, $\Delta u =0$}
+\begin{itemize}
+    \item Fundamental solution to $-\Delta u =f$ in $\R^n$ (done)
+    \item Mean value property
+    \item Maximum principle
+    \item Uniqueness for a BVP
+    \item (Harnack inequality)
+    \item Liouville's theorem, which leads to uniqueness for the Poisson equation in $C_c(\R^n)$.
+    \item Regularity
+\end{itemize}
+
+\subsection*{Mean value property}
+Recall $\alpha(n)$ is the volume of the closed unit ball in $\R^n$ and $n\alpha(n)$ is the surface area of the boundary of the closed unit ball.
+
+\begin{theorem}[Evans, p25]
+    Let $U\subseteq \R^n$ be an open bounded set. Assume $u\in C^2(U)$ is harmonic, i.e., $\Delta u =0$ in $U$. Then for every ball $B(x,r)\subseteq U$,
+    $$\frac{1}{r^n\alpha(n)}\int_{B(x,r)} u(y)dy = \frac{1}{r^{n-1} n\alpha(n)}\int_{\partial B(x,r)} u dS = u(x).$$
+\end{theorem}
+\begin{proof}
+    Fix $x\in U$. Let $r_x=dist(x,\partial U)>0$. For $0<r<r_x$, let
+    \begin{eqnarray*}
+        \phi(r) &=&\frac{1}{r^{n-1}n\alpha(n)}\int_{\partial B(x,r)} u dS = \frac{1}{n\alpha(n)}\int_{\partial B(0,1)} u(x+rz) dS(z).
+    \end{eqnarray*}
+    
+    \begin{eqnarray*}
+        \frac{d\phi}{dr}    &=& \frac{1}{n\alpha(n)}\int_{\partial B(0,1)} \sum^n\frac{\partial u}{\partial x_i}(x+rz)z_i dS(z)=\frac{1}{n\alpha(n)}\int_{\partial B(0,1)} \nabla u(x+rz)\cdot z dS\\
+            &=& \frac{1}{r^{n-1}n\alpha(n)}\int_{\partial B(x,r)}\nabla u(y)\cdot \nu dS(y) \stackrel{\text{div thm}}{=} \frac{1}{r^{n-1}n\alpha(n)}\int_{B(x,r)}\Delta u(y) dy =0.
+    \end{eqnarray*}
+    So,
+    \[ \frac{\phi}{dr} = \frac{r}{n}\frac{1}{r^n\alpha(n)}\int_{B(x,r)} \Delta u(y)dy. \tag{*} \]
+    
+    Because $\Delta u =0$, $\phi(r)=\lim_{r\to 0} \phi(r)=u(x)$.
+    
+    Finally, $$\int_{B(x,r)} u(y)dy =\int_0^r(\int_{\partial B(x,r)} u(y) dS(y))ds=\int_0^r (u(x)n\alpha(n)s^{n-1})ds = u(x)\alpha(n)r^n.$$
+\end{proof}
+
+\begin{theorem}[Evans, p36, converse of the previous theorem]
+    If $u\in C^2(U)$ satisfies $$u(x)=\frac{1}{r^{n-1}n\alpha(n)}\int_{\partial B(x,r)} u(y)dS(y)$$ for all $B(x,r)\subseteq U$, then $u$ is harmonic.
+\end{theorem}
+
+\begin{proof}
+    Suppose $\Delta u(x)\not=0$ for some $x\in U$. WLOG, suppose $\Delta u>0$. Since $\Delta u\in C(U)$, there exists $r_0>0$ such that $\Delta u>0$ on $B(x,r_0)$. By (*), for $0<r<r_0$,
+    $$\frac{d\phi}{dr} = \frac{r}{n} \fint_{B(x,r)} \Delta u>0,$$ contradicts hypothesis, $\phi(r)=u(x)$.
+\end{proof}
+
+\subsection*{Maximum principle}
+Assume $U$ is open bounded set.
+\begin{theorem}
+    Assume $u\in C^2(U)\cap C(\overline{U})$, $\Delta u =0$ in $U$. Then
+    \begin{enumerate}
+        \item $\max_{x\in \overline{U}} u(x) = \max_{\partial U} u(x)$ (weak maximum principle)
+        \item If $U$ is connected and there exists $x_0\in U$, $u(x_0)=\max_{\overline{U}} u$, then $u$ is constant in $U$.
+    \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+    (i). Suppose $x_0\in U$ and $u(x_0)=\max_{\overline{U}} u =:M$. Let $r_0 = dist(x_0,\partial U)$. Then $0<r_0<\infty$ and for $0<r<r_0$, we have
+    $$M=u(x_0) = \fint_{B(x_0,r)} u(y)dy \le M.$$
+    
+    It follows that
+    \[ u(y)=M \text{ in }B(x_0,r). \tag{**}\]
+    
+    Take $r\to r_0$ to conclude there exists $y\in \partial U$ such that $u(y)=M$.
+    
+    (ii). (**) shows the set $V=\{ y\in U: u(y) =M\}$ is open. But $V$ is relatively closed in $U$, too. Thus, $U$ is connected implies $V=U$.
+\end{proof}
+
+\emph{A uniqueness theorem for a BVP.}
+
+Consider \[\begin{cases}
+    -\Delta u = f, \quad \text{ in $U$}\\
+    u=g, \quad \text{ on $\partial U$}
+\end{cases}. \tag{BVP}\]
+
+\begin{theorem}
+    Let $f\in C(U)$, $g\in C(\partial U)$. Then, the number of solutions with $u\in C^2(U)\cap C(\overline{U})$ is 0 or 1.
+\end{theorem}
+\begin{proof}
+    Suppose $u$ and $\hat{u}$ are solutions. So, let $w=u-\hat{u}$. Then both $\pm w$ are harmonic and have boundary values 0 on $\partial U$. Thus, the maximum principle says $w\le 0$ and also $-w\le 0$. Therefore, $u=\hat{u}$.
+\end{proof}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\textbf{Monday, Feb 1 2016}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+One goal of PDE theory is to establish the correspondence between solutions and data.
+
+\emph{Describe:}
+\begin{enumerate}
+    \item A class of data (f,g) giving existence and uniqueness.
+    \item properties that characterize solutions, i.e., seeking an isomorphism of function spaces.
+\end{enumerate}
+
+\subsection*{Sample isomorphims theorem for elliptic BVP-like}
+
+$$u-\Delta u=f \quad \text{in $\R^n$}.$$
+\begin{itemize}
+    \item $f\in C^\alpha \leftrightarrow u\in C^{2,\alpha}$.
+    \item $f\in L^p \leftrightarrow u\in W^{2,p}$.
+\end{itemize}
+
+At this point, we have:
+\begin{itemize}
+    \item existence for $U=\R^n, f\in C^2_c(\R^n)$.
+    \item uniqueness for $(f,g)\in (C(U),C(\partial U)), u\in C^2(U)\cap C(\overline{U})$.
+\end{itemize}
+
+Today, we want to prove existence and uniqueness for Poisson's equation.
+
+\begin{remark}
+    There are lots of harmonic functions.
+\end{remark}
+
+\begin{theorem}[Liouville]
+    Suppose $u:\R^n\to\R$ is $C^2$ is harmonic and bounded, i.e.,
+    $$\vert u(x)\vert \le M \forall x\in \R^n.$$ Then $u$ is constant.
+\end{theorem}
+
+\begin{proof}
+    Let $x, \tilde{x}\in \R^n$. We claim that $u(x)=u(\tilde{x})$. To see this, let $r_0=\vert x-\tilde{x}\vert$ and $r>0$. Then
+    $$u(x)=\fint_{B(x,r_0+r)}u(y)dy$$ and $$u(\tilde{x})=\fint_{B(\tilde{x},r)}u(y)dy.$$
+    The idea is that we want to compare 2 integrals, which are overlapping.
+    
+    Note: $B(\tilde{x},r)\subseteq B(x,r_0+r)$.
+    
+    Let $A(r)=B(x,r_0+r)\backslash B(\tilde{x},r)$, then
+    $$vol(A)=\alpha(n)((r_0+r)^n-r^n).$$
+    Furthermore,
+    $$\vert \int_{B(x,r_0+r)} u - \int_{B(\tilde{x},r)} u\vert = \vert \int_{A(r)} u\vert \le M vol A(r).$$
+    
+    \begin{eqnarray*}
+        \alpha(n)(u(x)-u(\tilde{x})) &=&    \frac{1}{(r+r_0)^n}\int_{B(x,r+r_0)} u -\frac{1}{r^n}(\int_{B(x,r_0+r)}u -\int_{A(r)} u)\\
+            &=& \frac{1}{r^n}\int_{A(r)} u + \frac{1}{(r_0+r)^n}\int_{B(x,r+r_0)} u [1-\frac{(r_0+r)^n}{r^n}].
+    \end{eqnarray*}
+\end{proof}
+
+So, 
+\begin{eqnarray*}
+    \vert u(x)-u(\tilde{x})\vert &\le& \frac{M}{r^n}((r_0+r)^n-r^n) +\frac{M}{(r_0+r)^n}[-1+\frac{(r_0+r)^n}{r^n}]\\ 
+            &\le& 2M(\frac{(r_0+r)^n}{r^n}-1)\to 0
+\end{eqnarray*}
+as $r\to \infty$.
+
+\subsection*{(Existence and) uniqueness for $-\Delta u =f$ in $\R^n$}
+
+\begin{theorem}
+    Assume $f\in C^2_c(\R^n)$, $n\ge 3, u:\R^n\to \R$ is $C^2$ and $-\Delta u=f$. If $u$ is bounded on $\R^n$, then there exists a constant $c$ such that
+    $$u(x)=\int_{\R^n} \Phi(x-y)f(y)dy+c$$ where $$\Phi(y) =\frac{1}{n(n-2)\alpha(n)}\frac{1}{\vert x\vert^{n-2}}$$ for $x\not=0$.
+\end{theorem}
+
+\begin{proof}
+    Let $\tilde{u}(x)=\int_{\R^n} \Phi(x-y)f(y)dy$. Then we know $\tilde{u}:\R^n\to \R$ is $C^2$ and $-\Delta\tilde{u}=f$.
+    
+    \begin{claim}
+        $\tilde{u}$ is bounded (not true if $n=2$).
+    \end{claim}
+    Note: there exists $M_f, R$ such that
+    $$\begin{cases}
+        \vert f(x)\vert \le M_f, \forall x\in \R^n\\
+        f(x)=0, \text{ if } \vert x\vert >R
+    \end{cases}.$$
+    Thus,
+    $$\vert \tilde{u}(x)\vert \le M_f\int_{B(0,R)} \vert x-y\vert^{-(n-2)} \frac{dy}{n(n-2)\alpha(n)}.$$
+    
+    Case 1. $\vert x\vert >R$. Note that $y\mapsto \Phi(x-y)$ is harmonic in $B(0,R)$. By the mean value probperty,
+    $$\int_{B(0,R)} \Phi(x-y)dy = R^n\alpha(n)\Phi(x-0).$$ So, $$\vert \tilde{u}(x)\vert \le M_f\frac{R^n\alpha(n)}{n(n-2)\alpha(n)}\vert x\vert^{-n+2}\le const, \forall \vert x\vert >R.$$
+    
+    Case 2. $\vert x\vert \le R$.
+    \begin{eqnarray*}
+        \int_{B(0,R)}\vert x-y\vert^{-n+2} dy &\le& \int_{B(x,2R)} \vert x-y\vert^{-n+2}dy =\int_{B(0,2R)}\vert z\vert^{-n+2} dz\\
+        &=& \int_0^{2R} r^{-n+2}r^{n-1}dr n\alpha(n) = \frac{(2R)^2}{2}n\alpha(n).
+    \end{eqnarray*}
+    So, $$\vert \tilde{u}(x)\vert \le \frac{M_f}{n(n-2)\alpha(n)} 2R^2n\alpha(n).$$
+    
+    Let $w=u-\tilde{u}$, then $w$ is bounded on $\R^n$ is $C^2$ and
+    $$\Delta w =0.$$
+    By Liouville's, $w$ is constant. Thus we've proved the theorem.
+\end{proof}
+
+\emph{Uniqueness.} $u=\tilde{u}$ if $u(x)\to 0$ as $\vert x\vert \to \infty$.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\textbf{Wednesday, Feb 3 2016}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+Today we talk about regularity of harmonic functions and the question ``how is smoothness of $(f,g)$ related to $u$ in the problem
+$$\begin{cases}
+    -\Delta u=f, \quad \text{ in $U$}\\
+    u=g, \quad \text{on $\partial U$}
+\end{cases}.$$
+
+{\bf The standard mollifier.} Define $h:\R\to\R$ by
+$$h(t)=\begin{cases}
+    0, \quad t\le 0\\
+    e^{-1/t}, \quad t>0
+\end{cases}.$$
+then $h$ is $C^\infty$. Now define $m:\R^n\to \R$ by $m(x)=c_nh(1-\vert x\vert^2)$, $c_n$ chosen so that $\int_{\R^n} m(x) dx =1$.
+
+Note that $$ m(x)\begin{cases}
+    >0, \quad \vert x\vert<1\\
+    =0, \quad \vert x\vert \ge 1
+\end{cases}.$$
+
+For $\epsilon>0$, we define the standard mollifier $$m_\epsilon=\frac{1}{\epsilon^n}m(\frac{x}{\epsilon}).$$
+
+Some properties: 
+\begin{enumerate}
+    \item $$ m_\epsilon(x)\begin{cases}
+    >0, \quad \vert x\vert<\epsilon\\
+    =0, \quad \vert x\vert \ge \epsilon
+\end{cases}$$
+    \item $\int_{\R^n}m_\epsilon(x)dx =1$
+    \item $m_\epsilon$ is $C^\infty$
+\end{enumerate}
+
+\begin{definition}
+    Given $f:\R^n\to\R$, the convolution $m_\epsilon*f$ is
+    $$(m_\epsilon * f)(x)=\int_{\R^n}m_\epsilon(x-y)f(y)dy = \int_{B(x,\epsilon)}m_\epsilon(x-y)f(y)dy$$ provided the integral exists.
+\end{definition}
+Let $U\subseteq \R^n$ be open. For $\epsilon>0$, let $U_\epsilon = \{x\in U: dist(x,\partial U)>\epsilon\}$, i.e. the set of elements in $U$ that are at least $\epsilon$ away from the boundary of $U$.
+
+\begin{proposition}
+    Assume $f:U\to\R$ is continuous. Then
+    \begin{enumerate}
+        \item $m_\epsilon * f$ is defined on $U_\epsilon$ and is $C^\infty$
+        \item $D^\alpha(\rho_\epsilon * f)= (D^\alpha\rho_\epsilon)*f, \forall \alpha\in (\N_0)^n$
+    \end{enumerate}
+\end{proposition}
+
+\begin{proof}[Sketch]
+    Let $\alpha=(\alpha_1,...,\alpha_n)$. Then $D^\alpha m_\epsilon$ is smooth and $D^\alpha m_\epsilon =0$ if $\vert x\vert \ge \epsilon$. So $(D^\alpha m_\epsilon)*f(x)=\int_{B(x,r)}(D^\alpha m_\epsilon)(x-y)f(y)dy$ is defined for all $x\in U_\epsilon$.
+    
+    One proves (as on day 2), $(D^\alpha m_\epsilon)*f$ is continuous and differentiable with
+    $$\frac{\partial}{\partial x_i}((D^\alpha m_\epsilon)*f)(x) = (\frac{\partial}{\partial x_i} D^\alpha m_\epsilon)*f(x).$$
+    Use induction on $\vert \alpha\vert$.
+\end{proof}
+
+
+\begin{theorem}
+    For $x\in U$, $\lim_\epsilon m_e*f(x)=f(x)$. Moreover, the limit is attained uniformly on compact subset of $U$.
+\end{theorem}
+
+\begin{proof}
+    Let $V \Subset U$. Then $V\subseteq U_\epsilon$ for some $\epsilon>0$ ($\epsilon < dist(V,\partial U)$). For $x\in V$,
+    $$m_\epsilon*f(x)-f(x)=\int_{B(x,\epsilon)}m_\epsilon(x-y)(f(y)-f(x))dy.$$
+    
+    So, 
+    \begin{eqnarray*}
+        \vert m_\epsilon*f(x)-f(x)\vert &\le& \int_{B(x,\epsilon)} m_\epsilon(x-y)\vert f(x)-f(y)\vert dy\\
+            &\le&\int_{B(x,\epsilon)} m_\epsilon(x-y)\sup_{x\in V}\sup_{y\in B(x,\epsilon)} \vert f(x)-f(y)\vert dy\\
+            &=&\omega_{f, V+B(x,\epsilon}(\epsilon) \to 0 
+    \end{eqnarray*}
+    (because $f$ is uniformly continuous on $V+B(x,\epsilon)$ compact in $U$).
+\end{proof}
+
+\begin{theorem}
+    Suppose $u\in C(U)$ and $u$ satisfies the MVP
+    $$u(x)=\fint_{\partial B(x,r)} u(y)dS(y)$$ for all $B(x,r)\subseteq U$, then $u$ in $C^\infty$ (hence $u$ is harmonic).
+\end{theorem}
+\begin{proof}
+    Let $m_\epsilon$ be standard mollifier. Note $m_\epsilon$ is radial, $m_\epsilon(x)=\tilde{m}_\epsilon(\vert x\vert)$. Let $u_\epsilon=m_\epsilon*u$ in $U_\epsilon$. Then $u_\epsilon$ is $C^\infty$ in $U_\epsilon$.
+    
+    For $x\in U_\epsilon$, 
+\begin{eqnarray*}
+    u_\epsilon(x)   &=& \int_{B(x,\epsilon)} m_\epsilon(x-y)u(y)dy = \int_{B(x,\epsilon)}\tilde{m}(\vert x-y\vert)u(y) dy\\
+    &=& \int_0^\epsilon \int_{\partial B(0,r)} \tilde{m}_\epsilon(r)u(x+z)dS(z)dr\\
+    &=& \int_0^\epsilon \tilde{m}_\epsilon (r)u(x)\int_{\partial B(0,r)} 1 dS(z)dr = u(x)\int_{B(x,e)}m_\epsilon(x-y)dy=u(x).
+\end{eqnarray*}
+Thus, $u$ is $C^\infty$.
+\end{proof}
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\textbf{Friday, Feb 5 2016}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+Today we talk about bounds on derivatives (for analyticity).
+
+\begin{theorem}
+    Assume $u$ is harmonic in $U$. Then for all $B(x,r)\subseteq U$ and all multi-indices $\alpha=(\alpha_1,...,\alpha_n)$ of order $\vert \alpha\vert =k$
+    \[\vert D^\alpha u(x)\vert \le \frac{c_k}{r^{n+k}}\int_{B(x,r)} \vert u\vert \tag{*}\]
+    where $c_0=\frac{1}{\alpha(n)}, c_k=(2nk)^k\frac{2^n}{\alpha(n)}, k\ge 1$.
+\end{theorem}
+
+\begin{proof}
+    For $k=0$, by the MVP, $\vert u(x)\vert \le \frac{1}{r^n\alpha(n)}\int_{B(x,r)}\vert u(y)\vert dy$ for all $B(x,r)\subseteq U$. Note that for $\vert x-y\vert\le \frac{1}{2}r, B(y,\frac{1}{2}r)\subseteq B(x,r)$,
+    \[ \vert u(y)\vert \le\frac{1}{(\frac{1}{2}r)^n\alpha(n)}\int_{B(x,\frac{1}{2}r)}\vert u\vert \le \frac{2^n}{r^n\alpha(n)}\int_{B(x,r)} \vert u(y)\vert \tag{\#}\]
+for all multi-indices $\alpha$, $D^\alpha u$ is harmonic ($\Delta D^\alpha u = D^\alpha \Delta u =0$). So, $D^\alpha$ has MVP. Suppose $\vert \alpha\vert =1+\vert \beta\vert$, so $D^\alpha u =\frac{\partial}{\partial x_i} D^\beta u$ for some $i$. Then if $B(x,r)\subseteq U$,
+$$D^\alpha u(x) =\fint_{B(x,r)}\frac{\partial}{\partial x_i} D^\beta u(y)dy =\frac{1}{r^n\alpha(n)}\int_{\partial B(x,r)} D^\beta u(x)\nu^i(y) dS$$
+Thus,
+$$\vert D^\alpha u(x)\vert \le \sup_{\vert y-x\vert \le r} \vert D^\beta u(y)\vert \frac{1}{r^n\alpha(n)}r^{n-1}\alpha(n)$$
+
+Replace $r$ by $cr$ for $0\le c\le 1$,
+\[\vert D^\alpha u(x)\vert \le \sup_{\vert y-x\vert \le cr} \vert D^\beta u(y)\vert \frac{n}{cr} \tag{**}\]
+(idea: for $\vert \alpha\vert =k$, pick $c=\frac{1}{2k}$ and estimate on shells.)
+
+\begin{lemma}
+    Suppose $\vert \alpha\vert =k$. Then for all $B(x,r)\subseteq U$
+    \[\vert D^\alpha u(x)\vert \le \sup_{\vert y-x\vert \le\frac{1}{2}r} \vert u(y)\vert (\frac{2nk}{r})^k \tag{***}\]
+\end{lemma}
+(note: this will imply (*) using (\#))
+
+\begin{proof}
+    By induction on $k$. For $k=1$, use (**) with $c=\frac{1}{2}$. Suppose $k\ge2$ and (***) holds for $\vert \alpha \vert =k-1$. Let $\vert \alpha\vert =k$ then there exists $\beta, i$, $D^\alpha u(x) =\frac{\partial}{\partial x_i} D^\beta u(x)$. Take $c=\frac{1}{2k}$ in (**) for $\vert y-x\vert \le \frac{r}{2k}$, $B(y,\frac{r}{2}-\frac{r}{2k})\subseteq B(x,\frac{r}{2})$. 
+    
+    Use induction hypothesis (***) with replacements $\alpha \to \beta, x\to y, r/2\to r/2-r/2k, k\to k-1$.
+    
+    \begin{eqnarray*}
+        \vert D^\beta u(y)\vert &\le& \sup_{B(y,r/2-r/2k)} \vert u(z)\vert (\frac{n(k-1)}{r/2-r/2k})^{k-1}\\
+                &\le& \sup_{B(x,r/2)} \vert u(z)\vert (\frac{2nk}{r})^{k-1}.
+    \end{eqnarray*}
+    Put in (**) $c=1/2k$,
+    $$\vert D^\alpha u(y)\vert \le \sup_{B(x,r/2)} \vert u(z)\vert (\frac{2nk}{r})^k.$$
+\end{proof}
+\end{proof}
+
+\begin{theorem}[Analyticity of harmonic functions]
+Suppose $u$ is harmonic in $U$ open in $\R^n$. Let $B(0,2r)\subseteq U$. Then for $\vert x\vert \le \frac{r}{2n^2e}$,
+$$u(x) =\sum_{\alpha}\frac{D^\alpha u(0)}{\alpha!}x^\alpha.$$
+\end{theorem}
+
+\begin{lemma}
+    $$(x_1+...+x_n)^k =\sum_{\vert \alpha\vert=k} \frac{k!}{\alpha!} x^\alpha$$
+\end{lemma}
+
+\begin{proof}
+    Binomial theorem + induction.
+\end{proof}
+
+\begin{lemma}
+    $$\frac{1}{k!}(\frac{d}{dt})^k u(tx) =\sum_{\vert \alpha\vert =k} \frac{1}{\alpha!} D^\alpha u(tx)x^\alpha$$
+\end{lemma}
+
+Follow same strategy for $h(t,s) = u(sx_1,...,sx_{n-1}, tx_n)$.
+$$(\frac{d}{dt})^kh(t,t) = \sum_{j=0}^k \binom{k}{j}\frac{\partial^j}{\partial s^j} \frac{\partial^{k-j}}{\partial t^{k-j}} h(t,t)$$
+(induction on $n$).
+
+\begin{lemma}
+    $k^k\le k!e^k$.
+\end{lemma}
+\begin{proof}
+    $$k\ln k = x\ln x\vert^k_1 = \int_1^k(\ln x+1)dx \le \sum_{j=1}^k\ln j+k.$$
+\end{proof}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\textbf{Monday, Feb 8 2016}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+Suppose $\vert x\vert <ar$. By Taylor's theorem for $g(t)=u(tx)$,
+\begin{eqnarray*}
+    R_k(x)  &=& u(x)-\sum_{\vert \alpha\vert\le k} D^\alpha u(0)\frac{x^\alpha}{\alpha!}\\
+        &=& \frac{g^{(k+1)}(t)}{(k+1)!} = \sum_{\vert \alpha\vert =k+1} \frac{D^\alpha u(tx)x^\alpha}{\alpha!}
+\end{eqnarray*}
+for some $t\in (0,1)$. We have $B(tx,r)\subseteq B(0,2r)$ so
+\begin{enumerate}
+    \item $\vert D^\alpha u(tx)\vert \le (2nk)^k\frac{M}{r^k}$, $M=\frac{2^n}{\alpha(n)r^n}\int_{B(0,2r)}\vert u\vert$
+    \item $\vert x^\alpha=\vert \prod^n_{j=1}\vert x_j^{\alpha_j}\vert \le (ar)^{\vert \alpha\vert} = (ar)^k$
+\end{enumerate}
+Hence, $|R_k(x)| \le \sum_{\vert \alpha\vert =k} (2nk)^k\frac{M}{r^k}(ar)^k\frac{1}{\alpha!} = M(2nka)^k\frac{n^k}{k!} \le M(2n^2ea)^k\to 0$ provided $a<\frac{1}{2n^2e}$.
+
+\subsection*{Green's function} Consider
+\[\begin{cases}
+    -\Delta u =f, \quad \text{ in $U$}\\
+    u=g, \quad \text{ on $\partial U$}
+\end{cases} \tag{BVP}\]
+assume $U\subseteq \R^n$ in open and bounded and $\partial U$ is $C^1$.
+
+Our goal is to describe (in principle) a solution formula for (BVP).
+
+The Green's identity: if $u, v\in C^2(U)\cap C^1(\overline{U})$, then
+\[ \int_U ( u\Delta v - v\Delta u) = \int_{\partial U}(u\frac{\partial v}{\partial \nu} - v\frac{\partial u}{\partial \nu})dS \tag{*}\]
+
+Recall the fundamental solution $\Phi(x)$ to the Laplace's equation. This formally ``satisfies'' ``$-\Delta_y\Phi(x-y)=\delta(x-y)$''.
+
+\begin{proposition}
+    Let $x\in \overline{U}, u\in C^2(U)\cap C^1(\overline{U})$. Then, indeed
+    $$-u(x)-\int_U\Phi(x-y)\Delta u(y) dy =\int_{\partial U}  u(y)\frac{\partial \Phi(y-x)}{\partial \nu} -\Phi(y-x)\frac{\partial u}{\partial \nu}(y)dS(y).$$
+\end{proposition}
+
+\begin{proof}
+    In (*), replace $U$ by $V_\epsilon=U\backslash B(x,\epsilon)$ and take $v(y) =\Phi(y-x)$ then $\Delta v=0$ in $V_\epsilon$. $\partial V_\epsilon =\partial U\cup \partial B(x,\epsilon)$. Compute
+    $$\lim_{\epsilon\to 0}\int_{B(x,\epsilon)} u(y)\frac{\partial \Phi}{\partial \nu}(y-x) -\Phi(y-x)\frac{\partial u}{\partial \nu}(y) dS(y).$$
+    
+    For $n\ge 3$, $\Phi(y-x) =\frac{1}{(n-2)n\alpha(n)}\vert y-x\vert ^{-n+2}$, $D_y\Phi(y-x)= \frac{-1}{n\alpha(n)}\vert y-x\vert^{-n+1}\frac{y-x}{\vert y-x\vert}$. For $\vert y-x\vert =\epsilon$, $\nu(y)= -\frac{y-x}{\vert y-x\vert}$,
+    $$\frac{\partial \Phi}{\partial \nu}=\frac{1}{n\alpha(n)}\vert y-x\vert^{-n+1} =\frac{1}{n\alpha(n)}\frac{1}{\epsilon^{n-1}} =\frac{1}{\partial B(0,\epsilon)}.$$
+    Hence by Green's identity,
+    $$\int_{\partial B(x,\epsilon)} u\frac{\partial \Phi}{\partial \nu} =\fint_{\partial B(x,\epsilon)}u \to u(x)$$ as $\epsilon\to 0$.
+    
+    The other term goes to 0 because
+    $$\vert \int_{\partial B(x,\epsilon)} \Phi(y-x)\frac{\partial u}{\partial \nu}dS\vert \le \sup_{B(x,\epsilon)}|Du||\partial B(x,\epsilon)|\frac{1}{(n-2)n\alpha(n)}\epsilon^{-n+2} \to 0.$$
+\end{proof}
+Note: if we knew $\frac{\partial u}{\partial \nu}$ on $\partial U$, the proposition gives a formula for $u(x)$. But if we don't, then it is not enough.
+
+{\bf A trick.} Fix $x\in U$. Suppose we can find $v(y)=\Phi^x(y)\in C^2(U)\cap C^1(\overline{U})$ such that
+$$\begin{cases}
+    \Delta_y\Phi^x(y) =0, \quad \text{ in $U$}\\
+    \Phi^x(y) =\Phi(y-x), \quad \text{on $\partial U$}
+\end{cases}$$
+
+By Green's identity
+$$\int_U u\Delta\Phi^x -\Phi^x\Delta u =\int_{\partial U} (u(y)\frac{\partial \Phi^x}{\partial \nu} - \Phi^x(y)\frac{\partial u}{\partial \nu})dS(y)$$
+
+Cancel $\frac{\partial u}{\partial \nu}$:
+$$u(x) + \int_U (\Phi(y-x) -\Phi^x(y))\Delta u(y) =\int_{\partial U} u(y)(\frac{\partial \Phi^x}{\partial \nu}(y) -\frac{\partial \Phi}{\partial \nu}(y-x))dS.$$
+
+$\Phi(y-x) -\Phi^x(y)$ is called the Green's function.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\textbf{Wednesday, Feb 10 2016}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+Today we will talk about the Green's function for the ball. What we've discussed so far about the Green's function is hypothetical. Fix $x\in U$, suppose there exists $\Phi^x(y)$ such that
+\[\begin{cases} \Delta \Phi^x(y) =0 \quad \text{ in $U$}\\
+                \Phi^x(y)=\Phi(y-x) \quad \text{ on $\partial U$}
+                \end{cases} \tag{**}\]
+
+then
+$$u(x)=\int_U (\Phi(y-x)-\Phi^x(y))(-\Delta u(y))dy + \int_{\partial U} u(y)\frac{\partial}{\partial \nu}(\Phi^x(y) - \Phi(y-x)) dS(y)$$
+$u\in C^2(U)\cap C^1(\overline{U})$, $\partial U$ is $C^1$.
+
+\begin{definition}
+    Suppose $x\in U$, (**) has solution $\Phi^x$ in $C^2(U)\cap C^1(\overline{U})$. Then the Green's functio for $U$ is given by
+    $$G(x,y)=\Phi(y-x) - \Phi^x(y).$$
+\end{definition}
+
+{\bf Main properties.}
+\begin{enumerate}
+    \item $G$ is harmonic in $U$
+    \item $G(x,y) - \Phi(y-x) \in C^2(U)\cap C^1(\overline{U})$
+    \item $G(x,y)=0$ for all $y\in \partial U, x\in U$
+\end{enumerate}
+then for all $u\in C^2(U)\cap C^1(\overline{U})$, for all $x\in U$,
+$$u(x)= \int_U G(x,y)(-\Delta u(y))dy -\int_{\partial U} u(y)\frac{\partial G(x,y)}{\partial \nu_y} dS(y).$$
+
+\subsection{Green's function for the ball $B(0,1)$}
+
+Recall $\Phi(y-x)=\frac{a_n}{\vert y-x\vert^{n-2}}$, $a_n =\frac{1}{(n-2)n\alpha(n)}$, ($n\ge 3$).
+
+\begin{lemma}
+    Given $x\in \R^n\backslash\{0\}$, let $\tilde{x}=\frac{x}{\vert x\vert^2}$ so $\vert x\vert \vert \tilde x\vert =1$. Then for all $y$ with $\vert y\vert =1$, $$\vert y-x \vert =\vert y-\tilde{x}\vert\vert x\vert.$$
+\end{lemma}
+
+\begin{proof}
+    Straight forward calculation.
+\end{proof}
+
+Observe that for all $\vert x\vert <1$, $\vert y\vert =1$,
+$$\Phi(y-x)=\frac{a_n}{\vert y-x\vert^{n-2}}=\frac{a_n}{\vert y-\tilde{x}\vert^{n-2}\vert x\vert^{n-2}}.$$
+
+Define $$\Phi^x(y)=\frac{a_n}{\vert y-\tilde{x}\vert^{n-2}}\frac{1}{\vert x\vert^{n-2}}=\Phi(\vert y-\tilde{x})\vert x\vert).$$
+
+Clearly, $y\mapsto \Phi^x(y)$ is harmonic for $\vert y\vert <1$ (no singularity in $B(0,1)$). For $\vert y\vert =1$, $\Phi^x(y)=\Phi(y-x)$. The Green's function for the ball $B(0,1)$ is
+$$G(x,y)= \Phi(x-y)-\Phi((y-\tilde{x})\vert \tilde{x}\vert).$$
+
+The Green's function for $B(0,r)$ $(n\ge 3)$:
+
+For $r\not=1$, scale so the 1st term is invariant. Note that
+$$\Phi(\frac{x}{r})=r^{n-2}\Phi(x), \widetilde{(x/r)} =\tilde{x}r.$$
+
+\begin{eqnarray*}
+    G_{(r)}(x,y)&=& G_{(1)}(\frac{x}{r},\frac{y}{r})\frac{1}{r^{n-2}} = \Phi(y-x)-\frac{1}{r^{n-2}}\Phi((\frac{y}{r}-r\tilde{x})\vert \frac{x}{r}\vert)\\
+    &=& \Phi(y-x)-\Phi(\frac{\vert x\vert}{r}y-\frac{r}{\vert x\vert} x)
+\end{eqnarray*}
+Note: 
+\begin{eqnarray*}
+    \vert \frac{\vert x\vert y}{r}-\frac{rx}{\vert x\vert}\vert^2 &=&\frac{\vert x\vert^2\vert y\vert^2}{r^2}-2y\cdot x + r^2\\
+    &=& \vert \frac{\vert y\vert x}{r}-\frac{ry}{\vert y\vert}\vert^2
+\end{eqnarray*}
+Therefore,$G_{(r)}(x,y)=G_{(r)}(y,x)$.
+
+\rule{0.5\linewidth}{\linethickness}
+
+Solution formula for the Dirichlet problem
+$$\begin{cases}
+    -\Delta u =0 \quad \text{ in $U$}\\
+    u=g \quad \text{ on $\partial U$}
+\end{cases}$$
+If $u\in C^2(U)\cap C^1(\overline{U})$, then
+$$u(x)=-\int_{\partial U} g(y)\frac{\partial G_{(r)}(x,y)}{\partial \nu_y}dS(y).$$
+
+\begin{eqnarray*}
+    \frac{\partial}{\partial y_i}(\frac{a_n}{\vert y-x\vert^{n-2}}) =\frac{-1}{n\alpha(n)}\frac{1}{\vert y-x\vert^{n-1}}\frac{y_i-x_i}{\vert y-x\vert} =\frac{-1}{n\alpha(n)}\frac{y_i-x_i}{\vert y-x\vert^n}\\
+    \frac{\partial}{\partial y_i}(\Phi(\frac{\vert x\vert}{r}y-\frac{rx}{\vert x\vert})) =\frac{-1}{n\alpha(n)}\frac{\frac{\vert x\vert}{r}y_i -\frac{rx_i}{\vert x\vert}}{\vert \frac{\vert x\vert y}{r}-\frac{rx}{\vert x\vert}\vert^n}\frac{\vert x\vert}{r} = \frac{-1}{n\alpha(n)}\frac{\frac{\vert x\vert^2 y_i}{r^2}-x_i}{\vert y-x\vert^n}
+\end{eqnarray*}
+for $\vert y\vert =r$ because $\nu(y) =\frac{y}{\vert y\vert}=\frac{y}{r}$.
+$$u(x)=\int_{\partial B(0,r)} K(x,y)g(y)dS(y)$$
+where Poisson's kernel
+$$K(x,y)=-\frac{\partial G}{\partial \nu_y}(x,y) =\frac{1}{n\alpha(n)}\frac{1}{r}\frac{r^2-\vert x\vert^2}{\vert y-x\vert^n}.$$
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\textbf{Friday, Feb 12 2016}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section*{Symmetry of Green's function in $B(0,r)$}
+Recall $$G_{(r)}(x,t)=G_{(1)}(\frac{x}{r},\frac{y}{r})\frac{1}{r^{n-1}}$$ and
+$$G_{(1)}(x,y)=\Phi(y-x) -\Phi(\vert x\vert (y-\tilde{x}))$$ where $\tilde{x}=\frac{x}{\vert x\vert^2}$.
+
+\begin{lemma}
+    $G_{(r)}(x,y)=G_{(r)}(y,x)$ for all $x\not=y\in B(0,r)$
+\end{lemma}
+\begin{proof}
+    It suffices to treat $r=1$. It is easy to check that
+    $$\vert x\vert \vert y-\frac{x}{\vert x\vert^2}\vert = \vert y\vert \vert x -\frac{y}{\vert y\vert^2}\vert.$$
+\end{proof}
+
+    So far, if $\Delta u=0$ and $u\in C^2(U)\cap C^1(\overline{U}), U=B(0,r)$, then
+    \[u(x)=\int_{\partial B(0,r)} K(x,y)g(y)dS(y) \tag{P}\] and $$g=u\vert_{\partial \Omega}$$
+
+$$K(x,y)=\frac{1}{n\alpha(n)}\frac{r^2-\vert x\vert^2}{\vert y-x\vert^n}\frac{1}{r}$$
+
+The Dirichlet problem
+$$\begin{cases}
+    \Delta u =0 \quad \text{ in } U=B(0,r)\\
+    u=g \quad \text{ on } \partial U
+\end{cases}$$
+
+\begin{theorem}
+    Assume $g:\partial B(0,r)\to \R$ is continuous. Define $u$ by (P) for $\vert x\vert <r$. Then
+    \begin{enumerate}
+        \item $u$ is $C^\infty$ in $B^o(0,r)$
+        \item $\Delta u =0$ in $B^o(0,r)$
+        \item For $x_0\in \partial B(0,r)$, $\vert u(x)-g(x_0)\vert \to 0$ as $x\to x_0$, $\vert x\vert <r$.
+    \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) $K(x,y):B^o(0,r)\times \partial B(0,r) \to \R$ is $C^\infty$. It is easy to justify $D^\alpha u$ is differentiable
+$$D^\alpha u(x) =\int_{\partial B} D^\alpha_x K(x,y)g(y)dS(y).$$
+
+(2) Claim $\Delta_x K(x,y) =0$ ($\implies \Delta u=0$)
+$$K(x,y) = \sum_{i}\frac{y_i}{r}\frac{\partial}{\partial y_i} G(x,y)$$
+$$\Delta_x K(x,y) = \sum_{i}\frac{y_i}{r}\frac{\partial}{\partial y_i} \Delta_x G(x,y)= \sum_{i}\frac{y_i}{r}\frac{\partial}{\partial y_i} \Delta_x G(y,x)=0.$$
+
+(3) The idea is as $x\to x_0$, $K(x,y)$ acts like an approximate identity. The function $u_0=1$ is $C^2(U)\cap C^1(\overline{U})$ and $\Delta u_0 =0$. So,
+
+(a) $1=\int_{\partial B(0,r)} K(x,y)1 dS(y)$ for all $x\in B^o(0,r)$. Hence,
+$$u(x)-g(x)=\int_{\partial B(0,r)} K(x,y)(g(y)-g(x_0))dS(y).$$
+
+(b) Note that for all $\delta >0$, if $\vert x-y\vert >\delta$ then $K(x,y)\frac{1}{n\alpha(n)}\frac{r^2-\vert x\vert^2}{\vert y-x\vert^n}\frac{1}{r} \to 0$ as $\vert x\vert \to r$.
+
+(c) $K(x,y)\ge 0$.
+
+Let $\epsilon >0$, choose $\delta$ such that $\vert x_0 -y\vert <2\delta \implies \vert g(y)-g(x)\vert <\frac{\epsilon}{2}$. Let $M=\sup_{y\in\partial B}\vert g(y)\vert$ since $K\ge 0$ if $\vert x-x_0\vert <\delta$
+\begin{eqnarray*}
+    \vert u(x) -g(x_0)\vert &\le& \int_{\partial B, \vert y-x\vert \le 2\delta} K(x,y)\frac{\epsilon}{2}dS(y) + \int_{\partial B, \vert y-x\vert \ge 2\delta} K(x,y)2M dS(y)\\
+        &\le& \frac{\epsilon}{2}+2M o(1)
+\end{eqnarray*}
+where $o(1)\to 0$ as $\vert x-x_0\vert\to0$.
+\end{proof}
+
+\begin{corollary}
+    Let $U=B^o(x,r)$. Given $g:\partial U\to \R$ continuous. There exists a unique solution $u\in C^2(U)\cap C(\overline{U})$ to the Dirichlet problem
+    $$\begin{cases}
+    \Delta u =0 \quad \text{ in } U\\
+    u=g \quad \text{ on } \partial U
+\end{cases}$$
+Furthermore, let $X:=\{ u\in C^2(U)\cap C(\overline{U}): \Delta u=0$ in $U\}$
+$$\Vert u\Vert_X =\sup_{x\in \overline{U}}\vert u(x)\vert \le\sup_{\partial B} \vert g(y)\vert.$$
+Then, the map $g\mapsto u$ from $C(\partial U)\to X$ is an isomorphism.
+\end{corollary}
+
+\subsection*{Energy methods}
+(The name to mathematicians mean something involving $L^2$-estimate. There's little relation to a physicist's energy.)
+
+Consider
+\[\begin{cases}
+    -\Delta u =f \quad \text{ in } U\\
+    u=g \quad \text{ on } \partial U
+\end{cases}\tag{BVP}\]
+
+\begin{theorem}[Uniqueness]
+    Assume $U$ is bounded and $\partial U$ is $C^1$. Then (BVP) has at most one solution $u\in C^2(U)\cap C^1(\overline{U})$.
+\end{theorem}
+
+\begin{proof}
+    Suppose $u, \tilde{u}$ are solutions. Let $w=u-\tilde{u}$.
+    $$\begin{cases}
+        \Delta w =0 \quad \text{ in } U\\
+        w =0 \quad \text{ on } \partial U
+    \end{cases}$$ 
+    and $w\in C^2(U)\cap C^1(\overline{U})$. Then
+    $$0=\int_U w(-\Delta w) dx =\int_U Dw\cdot Dw - \int_{\partial U} w\frac{\partial w}{\partial \nu} dS.$$ The last term is $0$ since $w$ is 0 on the boundary. Therefore,
+    $$0 = \int_U \vert Dw\vert^2 dx.$$
+    
+    Since $Dw$ is continuous, $\vert Dw\vert^2 =0$, so $Dw=0$ in $U$. Therefore $w$ is constant on each component of $U$. So $w=0$ in $U$ since $w=0$ on $\partial U$. Hence $u=\tilde{u}$.
+\end{proof}
+
+Remark: Isomorphism theorem of Lions and Magenes: for $\partial U$ smooth, $u\in H^{k+2}(U)\iff \binom{f}{g}\in H^k(U)\times H^{k+3/2}(\partial U)$.
+\end{document}

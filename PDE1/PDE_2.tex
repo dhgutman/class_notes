@@ -1,0 +1,318 @@
+\documentclass[11pt]{amsart}% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+%\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+%\geometry{landscape}                		% Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex	
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{esint}
+\usepackage{enumerate}
+\usepackage{epstopdf}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{claim}{Claim}
+\newtheorem{example}{Example}
+\newtheorem{remark}{Remark}
+\newtheorem{corollary}{Corollary}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+\newcommand\F{\mathbb{F}} \newcommand\E{\mathbb{E}} \newcommand\R{\mathbb{R}}
+\newcommand\Z{\mathbb{Z}} \newcommand\N{\mathbb{N}} \newcommand\C{\mathbb{C}}
+\newcommand\Q{\mathbb{Q}} \newcommand\eps{\varepsilon}
+\newcommand\cM{\mathcal{M}}	\newcommand\cA{\mathcal{A}}
+\newcommand\cC{\mathcal{C}} \newcommand\cB{\mathcal{B}}
+\newcommand\cE{\mathcal{E}}
+\DeclareMathOperator{\sech}{sech}
+\DeclareMathOperator{\dt}{\frac{d}{dt}}
+\DeclareMathOperator{\pt}{\frac{\partial}{\partial t}}
+\DeclareMathOperator{\dive}{div}
+\DeclareMathOperator{\grad}{grad}
+
+
+
+\title{Partial Differential Equations 1}
+\author{Son Van}
+\date{Spring 2016}
+
+\begin{document}
+\maketitle
+This is part 2 of the notes.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\textbf{Monday, Feb 15 2016}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+Today we will talk about another approach to the BVP using potential theory.
+
+\[\begin{cases}
+    -\Delta u=f \quad \text{ in }U\\
+    u=g \quad \text{ on } \partial U
+\end{cases}\]
+We have
+$$u(x)=\int_U \Phi(y-x)(-\Delta u)(y) dy + \int_{\partial U} \Phi(y-x)\frac{\partial u}{\partial \nu} -u(y)\frac{\partial \Phi}{\partial \nu}(y-x) dS(y)$$
+
+
+The goal is we want to get rid of 
+$$\Phi(y-x)\frac{\partial u}{\partial \nu}$$
+and replace $u(y)$ by some $\phi(y)$ which is termed ``double layer potential".
+
+We want to develop a boundary integral equation to solve for $\phi$ so that
+$$u(x)\to g(x_0), x\to x_0 \in \partial U$$
+and $$g(x)= \Phi * f(x_0) \pm \frac{1}{2}\phi(x_0) -\int_{\partial U} \phi(y)\frac{\partial \Phi}{\partial \nu} (y-x_0)dS(y).$$
+
+We look at the Direchlet's principle (variational method). Let $$A_g=\{ v\in C^2(U)\cap C^1(\overline{U})| v= g \text{ on } \partial U\}$$
+$$A_0 = \{ v\in C^2(U)\cap C^1(\overline{U})| v=0 \text{ on } \partial U\}.$$
+
+1. Suppose $f,g$ are continuous and $u\in A_g$ satisfies BVP, then for all $v\in A_0$,
+$$\int_U fv = \int_U f(-\Delta u) dx = \int_U Dv\cdot Dv + \int_{\partial U} v\frac{\partial u}{\partial \nu}$$ where $v\frac{\partial u}{\partial \nu}=0$ on the boundary. 
+
+In other words, $u$ satisfies
+$$\int_U Du\cdot Dv dx =\int_U fv dx, \forall v\in A_0.$$
+This is called the weak form of BVP.
+
+2. Define, for any $u\in A_g$ the functional
+$$I[u] = \int_U(\frac{1}{2}vert Du\vert^2 -fu) dx$$
+$$I: A_g \to \R.$$
+
+\begin{theorem}
+    Assume $U$ is open bounded on $\R^n$, $\partial U\in C^1$. Assume $f,g$ are continuous, $u\in A_g$. Then $u$ satisfies BVP iff
+    \[ I[u]=\min_{v\in A_g} I[v]. \tag{*}\]
+\end{theorem}
+
+\begin{proof}
+    $(\Leftarrow)$. Suppose (*) holds, fix $v\in A_g$ arbitrary. Define $l(t) = I[u+tv]$ ($u+tv \in A_g$), $l:\R\to\R$ and $l(0)=\min l$ and $l$ is quadratic. So,
+    \begin{eqnarray*}
+        0&=&l'(0) = \frac{d}{dt}\int_U \frac{1}{2} \vert Du + tDv\vert^2 -f(u+tv) \vert_{t=0}\\
+        &=& \int_U Du\cdot Dv -fv, \forall v\in A_0.
+    \end{eqnarray*}
+    Integrate by parts,
+    $$\int_U Du\cdot Dv = \int_U(-\Delta u)v +\int_{\partial U} \frac{\partial u}{\partial \nu} v.$$
+    So, $0 =\int_U(-\Delta u-f)v$ for all $v\in A_0$. Thus,
+    $$\begin{cases}
+        -\Delta u =f \quad \text{ in } U\\
+        u=g \quad \text{ on } \partial U
+    \end{cases}.$$
+    
+    $(\implies)$. Suppose $u\in A_g$ and satisfies BVP. Let $w\in A_g$. We claim $I[w]\ge I[u]$. Then $v=w-u\in A_0$ and $w=u+v$.
+    \begin{eqnarray*}
+        I[u+v] &=& \int_U\frac{1}{2}\vert u+v\vert^2 -f(u+v)\\
+            &=& I[u] + \int_U Du\cdot Dv -fv +\int_U\frac{1}{2}\vert Dv\vert^2 \ge I[u]
+    \end{eqnarray*}
+\end{proof}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section*{The heat (diffusion) equation}
+
+$$u_t =\Delta u.$$
+
+Origin: flow by curvature. Consider a curve in $\R^2$ moving parametrized by $(x,t)\mapsto \overline{u}(x,t)\in \R^2$, $x\in [0,1], t\in \R$. Then the unit tangent at time $t$ is
+$$\tau = \frac{u_x}{\vert u_x\vert}.$$
+Element of arclength $ds = \vert u_x\vert dx$.
+
+Curvature: $$\kappa =\frac{d\tau}{ds}= \frac{u_{xx}}{\vert u_{xx}\vert^2} -\frac{u_{x}}{\vert u_x\vert^3}(\frac{u_x}{\vert u_x\vert} \cdot u_{xx}).$$
+
+We seek to define velocity $u_t$ so that normal velocity = curvature.
+$$u_t = \frac{\kappa}{\vert \kappa\vert} = \vert \kappa\vert$$ since $\kappa\cdot \tau=0$. It suffices to set $$u_t =\frac{u_{xx}}{\vert u_x\vert^2} (= \kappa +c(t)\cdot \tau).$$ This is a nonlinear version of the heat equation.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\textbf{Wednesday, Feb 17 2016}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+Denote $R_+=(0,\infty)$.
+
+We want to hunt for the fundamental solution. The IVP is given $g:\R^n\to \R$. Find $u:\R^n\times [0,\infty)\to \R$ so that
+$$\begin{cases}
+    u_t=\Delta u, \quad x\in \R^n, t>0\\
+    u(x,0) =g(x)
+\end{cases}$$  
+
+\begin{definition}
+    We say $u\in C^{2,1}$ on some set if $u, u_t, D_xu, D_x^2u$ exist and are continuous on the set.
+\end{definition}
+
+Symmetry for $u_t=\Delta u$ in $\R^n\times \R_+$. Suppose $u\in C^{2,1}(\R^n,\R_+)$ is a solution. Then $v(x,t)$ is also in each case:
+
+\begin{enumerate}
+    \item (Translate) $\forall y\in \R^n$, $v(x,t)=u(x-y,t)$
+    \item (Rotation) For any $n\times n$ orthogonal matrix $Q$, $v(x,t)=u(Qx,t)$
+    \item (Scaling) $\forall \lambda >0, v(x,t)=u(\lambda x, \lambda^2 t)$
+    \item (Superposition) $\forall g\in C_c(\R^n)$, $u(x,t) =\int_{\R^n} u(x-y,t) g(y) dy$
+\end{enumerate}
+
+{\emph Heuristic.} To solve IVP, represent
+$$g(x)=\int_{\R^n}\delta(x-y)g(y)dy$$
+ we seek to find $u(x,t)$ so that
+ \begin{eqnarray*}
+    ``u(x,t) &\to& \delta(x)''\\
+    t   &\to& 0.
+ \end{eqnarray*}
+ We expect $u(x,t)$ to have one symmetry as $\delta(x)$. So, we look for
+ \begin{enumerate}
+     \item $u(Qx,t)=u(x,t)$ for all orthogonal $Q$
+     \item $u(x,t) = A(\lambda)u(\lambda x, \lambda^2 t)$ where $A(\lambda)=\lambda^n$ to make sure
+     $$1=\int_{\R^n}\delta(x)dx = \lim_{t\to 0}\int_{\R^n} u(x,y) dx =\int u(\lambda x, \lambda^2 t)\lambda^n dx.$$
+ \end{enumerate}
+ 
+ Suppose $u$ has properties (1), (2), then given $(x_0, t_0)$ we choose $Q$ so $Qx_0=\vert x_0\vert e_1$. Choose $\lambda_0 =\frac{1}{\sqrt{t_0}}$. Then $u(x_0, t_0) =u(\vert x_0\vert e_1, t_0)=t^{-n/2}_0 u(\frac{\vert x_0\vert e_1}{\sqrt{t_0}},1)$. Thus, we expect
+ $$u(x,t)=t^{-n/2} v(\frac{\vert x\vert}{\sqrt{t}}).$$ We could replace $\frac{\vert x\vert}{\sqrt{t}}$ by $\frac{\vert x\vert^2}{{t}}$. So, $$u(x,t)=t^{-n/2} v(\frac{\vert x\vert^2}{t}).$$
+ $$v:[0,\infty)\to \R.$$
+ 
+ ODE for $r$: let $r=\vert x\vert, z=\frac{r^2}{t}$, then
+ \begin{eqnarray*}
+    u_t &=& -\frac{n}{2} t^{-\frac{n}{2} -1}v(z) + t^{-n/2}v'(z)(-\frac{r^2}{t^2})\\
+        &=& (t^{-\frac{n}{2}-1})(-\frac{n}{2}v(z) - zv'(z))
+ \end{eqnarray*}
+ 
+ \begin{eqnarray*}
+    \Delta u &=& (\partial_r^2 + \frac{n-1}{r}\partial_r)(t^{-n/2}v(z)) = t^{-\frac{n}{2}-1} [4zv''(z) + 2nv'(z)]
+ \end{eqnarray*}
+ 
+ So, $u_t =\Delta u$ if
+ \begin{eqnarray*}
+    4zv''(z) + (2n+z)v'(z) + \frac{n}{2} v(z) =0\\
+    \iff z(4v''+v') + \frac{n}{2}(4v' + v) = 0.
+ \end{eqnarray*}
+ We may choose $$v=e^{-z/4} a$$ so $$u(x,t) = \frac{a}{t^{n/2}} e^{-\vert x^2\vert}{4t}.$$
+ 
+ Define: $y=\frac{x}{2\sqrt{t}}$.
+ $$1=\int u(x,t)dx = 2^n a\int e^{-\vert y\vert^2} dy = 2^n\prod_{j=1}^n(\int_\R e^{-y^2_j}dy_j).$$
+ 
+ Let $a=(4\pi)^{-n/2}$, then
+ $$u=\frac{1}{4\pi t)^{n/2}} e^{-\vert x\vert^2/4t} =: \Phi(x,t).$$
+ $\Phi$ is the fundamental solution of $u_t=\Delta u$ in $\R^n$.
+ 
+ {\bf Properties.}
+ \begin{enumerate}
+     \item $\Phi$ is $C^\infty$ on $\R^n\times \R_+$
+     \item $\partial_t \Phi =\Delta \Phi$
+     \item $\int_{\R^n} \Phi(x,t)dx =1$ for all $t>0$
+     \item $\Phi>0$ and for all $\delta>0$, $\sup_{\vert x\vert >\delta} \Phi(x,t)\to 0$ as $t\to 0$.
+     $$u(x,t)=\int_{\R} \Phi(x-y,t)g(y) dy.$$
+ \end{enumerate}
+ 
+ For last class, motion by curvature shortening. Suppose $$(x,t)\mapsto u(x,t)$$ is smooth and 1-periodic in $X$. Assume $\vert u\vert \not=0$. Let $\Gamma(t)$ be the image of $x\mapsto u(x,t)$. The arclength
+ $$\vert \Gamma(t)\vert =\int ds =\int_{[0,1]}\vert u_x\vert dx.$$
+ 
+ Claim. The following is true
+ $$\frac{d}{dt}\vert \Gamma(t)\vert = -\int \kappa\cdot u_t dx.$$
+ 
+ Why: \begin{eqnarray*}
+    LHS &=& \int_{[0,1]} \frac{u_x}{\vert u_x\vert} u_{xt} dx = \int_{[0,1]} \frac{u_x}{\vert u_x\vert} (u_t)_x dx\\
+    &=& \int -\frac{\partial}{\partial x} (\frac{u_x}{\vert u_x\vert})\cdot u_t dx + BC\\
+    &=& -\int \frac{\partial}{\partial s}(\tau)\cdot u_t ds=-\int \kappa\cdot u_t ds
+ \end{eqnarray*}
+ where $\tau=\frac{u_x}{\vert u_x\vert}$. 
+ 
+ If $z:\R\to \R^n$, $F:\R^n\to \R$,
+ $$\frac{d}{dt}(F(z(t)) = \nabla_z F\cdot z'.$$
+ ``$\kappa = -\grad\vert \Gamma(t)\vert$'' in functional sense.
+ 
+ \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\textbf{Friday, Feb 19 2016}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+{\bf Weak maximum principle.} Assume $U\subseteq \R^n$ is open and bounded. For $T>0$, put $$U_T=U=(0,T],$$ $$\Gamma_T=\partial U\times [0,T] \bigcup U\times\{0\} =\partial U_T\backslash(U\times\{T\}).$$
+
+\begin{theorem}
+    Assume $u\in C^{2,1}(U_T)\cap C^1(\overline{U_T})$ and
+    $$u_t -\Delta u \le 0$$ in $U_T$. Then, for all $(x,t) \in \overline{U_T}$, $u(x,t)\le \max_{\Gamma_T} u$, i.e.,
+    $$\max_{\overline{U_T}} = \max_{\Gamma_T} u.$$
+\end{theorem}
+
+\begin{proof}[''Proof"]
+    If $(x,t)\in U_T$ is a max, then at $(x,t)$,
+    $$u_t\ge 0, Du=0, \frac{\partial^2 u}{\partial x_i^2} \le 0$$ so $$u_t-\Delta u \ge 0.$$
+\end{proof}
+
+\begin{proof}
+    For $\epsilon >0$, let $u^\epsilon(x,t)=u(x,t)-\epsilon t$. Then $u_t^\epsilon - \Delta u^\epsilon \le 0-\epsilon <$ in $U_T$.
+    
+    We claim that $u^\epsilon$ has no max in $U_T$. To see this, if $(x,t)$ is a max, then at $(x,t)$
+    $$u_t^\epsilon \ge 0, D_xu^\epsilon =0, \frac{\partial^2 u^\epsilon}{\partial x_i^2}\le 0.$$ This means
+    $$u_t^\epsilon -\Delta u^\epsilon \ge 0$$ which is a contradiction. Thus,
+    $$\max_{\overline{U_T}}u^\epsilon = \max_{\Gamma_T} u^\epsilon.$$ At any $(x,t)\in \overline{U_T}$,
+    $$\vert u(x,t) - u^\epsilon(x,t)\vert \le \epsilon T.$$
+    Assume as $\epsilon\to 0$, $u^\epsilon - u \to 0$ uniformly in $\overline{U_T}$. 
+    
+    One may deduce, as $\epsilon\to 0$
+    $$\max_{\overline{U_T}} u^\epsilon\to \max u$$
+    and thus
+    $$\max_{\Gamma_T} u^\epsilon \to \max_{\Gamma_T} u.$$
+\end{proof}
+
+{\bf Energy method.} Uniqueness and stability.
+
+\begin{theorem}
+    Assume $U$ is bounded and open and $\partial U$ is $C^1$. Suppose $f:U\to \R, g: \Gamma_T \to \R$ are continuous. Consider the IBVP
+    $$\begin{cases}
+        u_t-\Delta u = f \qquad, U_T\\
+        u=g \qquad, \Gamma_T
+    \end{cases}.$$
+    Then there can be at most 1 solution $u\in C^{2,1}(U_T)\cap C^1(\overline{U_T})$.
+\end{theorem}
+
+\begin{proof}
+    Suppose $u, \tilde{u}$ are 2 solutions. Let $w=u-\tilde{u}$, we have
+    $$\begin{cases}
+        w_t -\Delta w =0 \qquad, U_T\\
+        w=0 \qquad, \Gamma_t
+    \end{cases}.$$
+    
+    Multiply by $w$ and integrate in $X$,
+    $$\int_U w\frac{\partial w}{\partial t} dx =\int_U w\Delta w dx$$
+    
+    $$\frac{d}{dt}\int_U \frac{w^2}{2}dx = -\int_U \vert Dw\vert^2 dx \le 0.$$
+    
+    Integrate in $t$,
+    $$0\le \int_U w(x,t)^2 dx \le \int_U w(x,0)^2dx=0.$$
+    
+    Thus, $w(x,t)=0$ in $U$ and $\forall t\in [0,1]$.
+\end{proof}
+
+{\bf A stability estimate.} Consider the IBVP
+$$\begin{cases}
+    u_t -\Delta u =0 \qquad, U_T\\
+    u=0 \qquad, \partial U \times [0,T]\\
+    u=g \qquad, U\times\{0\}
+\end{cases}.$$
+Suppose $u\in C^{2,1}(U_T)\cap C^1(\overline{U_T})$, then
+$$\int_U\frac{1}{2} u(x,t)^2 dx + \int_0^t\int_U \vert D_x u(x,s)\vert^2 dxds =\int_\Omega \frac{1}{2}g^2(x)dx$$
+So, $$\Vert u\Vert_{L^2} \le \Vert g\Vert_{L^2}$$ (changes in $g$ dominate changes in $u$ in $L^2$ sense.)
+
+The ``backwards'' initial value problem: unique but highly unstable.
+$$\begin{cases}
+    u_t = \Delta u \qquad, x\in U, t\in [0,T]\\
+    u=0 \qquad, x\in \partial U, t\in [0,T]\\
+    u=g \qquad, x\in U, t=T
+\end{cases}$$
+
+\begin{theorem}[Backward uniqueness, see Evans]
+    The problem has at most 1 solution, $u\in C^{2,1}(U_T)$.
+\end{theorem}
+
+{\bf Ill-posedness.} Take $n=1$, $U=(0,\pi)$. Consider
+$$\begin{cases}
+    u_t = u_{xx} \qquad, 0<x<\pi, 0<t<T\\
+    u=0 \qquad, x=0,\pi
+\end{cases}$$
+
+There are solutions
+$$u_k(x,t)=e^{-k^2 t} \sin kx, \quad k\in \Z.$$
+
+Put $g_k(x) = e^{-kT}\sin kx$ and look at $\Vert u_k\Vert_{L^2}/\Vert g_k\Vert_{L^2}$.
+$$(\int_0^\pi e^{-2k^2 t}\sin^2 kx dx)^{1/2} / (\int_0^\pi e^{-2k^2 T}\sin^2 kx dx)^{1/2}=e^{-k^2(T-t)}.$$
+
+The ratio ``solution/data'' could be arbitrarily large.
+\end{document}
